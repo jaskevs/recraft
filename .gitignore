@@ -7,6 +7,21 @@ yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
 
+.DS_Store
+
+# Backend
+/backend/uploads
+/backend/extensions/*/node_modules
+
+# Frontend
+/frontend/.cache
+/frontend/build
+/frontend/public/build
+/frontend/.env
+
+# Docker
+/docker-data
+
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
@@ -103,6 +118,8 @@ dist
 # vuepress v2.x temp and cache directory
 .temp
 .cache
+
+
 
 # vitepress build output
 **/.vitepress/dist
