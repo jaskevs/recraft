@@ -1,0 +1,14 @@
+{
+  "name": "rehive-space-monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "start:backend": "cd backend && docker-compose up -d",
+    "start:frontend": "cd frontend && npm run dev",
+    "start": "npm run start:backend && npm run start:frontend",
+    "build": "cd frontend && npm run build",
+    "clean": "cd backend && docker-compose down && cd ../frontend && rd /s /q .cache build node_modules"
+  }
+}
