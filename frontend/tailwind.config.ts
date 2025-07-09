@@ -5,9 +5,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
-        'serif': ['Playfair Display', 'serif'],
-        'mono': ['JetBrains Mono', 'monospace'],
+        'sans': ['Josefin Sans', 'system-ui', 'sans-serif'],
+        'serif': ['Domine', 'serif'],
+        'mono': ['Monaco', 'Consolas', 'monospace'],
       },
       colors: {
         primary: {
