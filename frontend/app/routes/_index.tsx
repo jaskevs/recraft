@@ -2,11 +2,12 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { getAssetUrl, getPosts, type Post } from "../lib/directus";
+import { CalendarIcon, ClockIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Re:hive Space - Tech Blog" },
-    { name: "description", content: "A modern tech blog built with Remix and Directus" },
+    { title: "reCraft — Thoughtful writing on design & technology" },
+    { name: "description", content: "A minimalist blog focused on design, technology, and thoughtful perspectives." },
   ];
 };
 
@@ -24,79 +25,142 @@ export default function Index() {
   const data = useLoaderData<typeof loader>();
   const { posts, success, error } = data;
 
+  // Format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Welcome to Re:hive Space
+    <>
+      {/* Hero Section */}
+      <section className="minimal-hero">
+        <div className="container container-narrow">
+          <h1>
+            <strong>reCraft</strong> — Thoughtful writing on design & technology
           </h1>
-          <p className="text-lg text-gray-600">
-            A modern tech blog built with Remix and Directus
+          <p>
+            Exploring the intersection of creativity, functionality, and human experience through minimal design and clear thinking.
           </p>
-        </header>
+        </div>
+      </section>
 
-        {!success && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
-            <p className="text-red-700">
-              Error loading posts: {error}
-            </p>
-            <p className="text-red-600 text-sm mt-2">
-              Make sure Directus is running at localhost:8055 and you have published posts.
-            </p>
-          </div>
-        )}
-
-        <main>
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Latest Posts</h2>
+      {/* Main Content */}
+      <section className="minimal-content">
+        <div className="container">
           
-          {posts.length === 0 ? (
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <p className="text-gray-600">
-                No posts found. Create some posts in Directus and make sure they're published!
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post: Post) => (
-                <article key={post.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  {post.featured_image && (
-                    <img 
-                      src={getAssetUrl(post.featured_image)}
-                      alt={post.title}
-                      className="w-full h-48 object-cover"
-                    />
-                  )}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      <Link 
-                        to={`/blog/${post.slug}`}
-                        className="hover:text-blue-600 transition-colors"
-                      >
-                        {post.title}
-                      </Link>
-                    </h3>
-                    {post.excerpt && (
-                      <p className="text-gray-600 mb-4">{post.excerpt}</p>
-                    )}
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <time dateTime={post.date_created}>
-                        {new Date(post.date_created).toLocaleDateString()}
-                      </time>
-                      <Link 
-                        to={`/blog/${post.slug}`}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        Read more →
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
+          {!success && (
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '4rem 0', 
+              color: 'var(--color-dark-gray)' 
+            }}>
+              <p>Unable to load posts. Please ensure Directus is running at localhost:8055.</p>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+
+          {posts.length === 0 && success ? (
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '4rem 0', 
+              color: 'var(--color-dark-gray)' 
+            }}>
+              <p>No posts found. Create some posts in Directus and make sure they're published.</p>
+            </div>
+          ) : (
+            <>
+              <div style={{ textAlign: 'center', marginBottom: 'var(--space-3xl)' }}>
+                <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 500, marginBottom: 'var(--space-sm)' }}>
+                  Latest Posts
+                </h2>
+                <p style={{ color: 'var(--color-dark-gray)' }}>
+                  Recent thoughts and insights
+                </p>
+              </div>
+
+              <div className="minimal-blog-grid">
+                {posts.slice(0, 6).map((post: Post) => (
+                  <Link 
+                    key={post.id} 
+                    to={`/blog/${post.slug}`} 
+                    className="minimal-post-card"
+                  >
+                    {post.featured_image && (
+                      <img 
+                        src={getAssetUrl(post.featured_image, 400, 240, 80)}
+                        alt={post.title}
+                        className="minimal-post-image"
+                        onError={(e) => {
+                          console.log('Image failed to load:', post.featured_image);
+                          console.log('Generated URL:', getAssetUrl(post.featured_image, 400, 240, 80));
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <div className="minimal-post-content">
+                      <div className="minimal-post-meta">
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <CalendarIcon style={{ width: '14px', height: '14px' }} />
+                          {formatDate(post.date_created)}
+                        </span>
+                        <span>·</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                          <ClockIcon style={{ width: '14px', height: '14px' }} />
+                          Read
+                        </span>
+                      </div>
+                      <h3 className="minimal-post-title">{post.title}</h3>
+                      <p className="minimal-post-excerpt">
+                        {post.excerpt || "Continue reading to discover more insights and perspectives..."}
+                      </p>
+                      <div className="minimal-read-more">
+                        Read article 
+                        <ArrowRightIcon style={{ width: '16px', height: '16px', marginLeft: '0.5rem' }} />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {posts.length > 6 && (
+                <div style={{ 
+                  textAlign: 'center', 
+                  marginTop: 'var(--space-3xl)', 
+                  padding: 'var(--space-2xl) 0' 
+                }}>
+                  <Link 
+                    to="/blog" 
+                    style={{
+                      display: 'inline-block',
+                      padding: '0.75rem 2rem',
+                      border: '1px solid var(--color-black)',
+                      color: 'var(--color-black)',
+                      fontWeight: 500,
+                      transition: 'all var(--transition-base)',
+                      textDecoration: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-black)';
+                      e.currentTarget.style.color = 'var(--color-pure-white)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'var(--color-black)';
+                    }}
+                  >
+                    View all posts
+                  </Link>
+                </div>
+              )}
+            </>
+          )}
+
+        </div>
+      </section>
+    </>
   );
 }

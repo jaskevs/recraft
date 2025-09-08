@@ -1,7 +1,7 @@
 @"
-# Rehive Space Frontend
+# reCraft Dev Frontend
 
-Remix-powered frontend for the rehive space, optimized for performance.
+Remix-powered frontend for the recraft space, optimized for performance.
 
 ## Setup
 1. Install dependencies: `npm install`

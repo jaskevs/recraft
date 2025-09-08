@@ -1,5 +1,5 @@
-# rehive
-Re:hive Space
+# recraft
+reCraft
 A modern tech blog built with:
 - **Backend**: Directus headless CMS with MySQL
 - **Frontend**: Remix framework with TailwindCSS

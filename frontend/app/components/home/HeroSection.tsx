@@ -10,7 +10,7 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({
-  title = "Welcome to Re:hive Space",
+  title = "Welcome to reCraft",
   subtitle = "A modern tech blog built with Remix and Directus",
   description = "Thoughtful writing about technology, development, and the craft of creating digital experiences that matter.",
   showScrollIndicator = true,

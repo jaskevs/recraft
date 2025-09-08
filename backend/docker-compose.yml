@@ -1,7 +1,7 @@
 version: '3'
 services:
   directus:
-    container_name: rehive-space-directus
+    container_name: recraft-space-directus
     image: directus/directus:10.0.0
     ports:
       - "8055:8055"
@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
 
   mysql:
-    container_name: rehive-space-mysql
+    container_name: recraft-space-mysql
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:

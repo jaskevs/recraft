@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { ClockIcon } from "@heroicons/react/24/outline";
 
 interface TypographyProps {
   children: ReactNode;
@@ -64,7 +65,8 @@ export const ReadingTime = ({ wordCount, wordsPerMinute = 200, className = "" }:
   const readingTime = Math.ceil(wordCount / wordsPerMinute);
   
   return (
-    <Caption className={className}>
+    <Caption className={`inline-flex items-center gap-1 ${className}`}>
+      <ClockIcon className="w-4 h-4" />
       {readingTime} min read
     </Caption>
   );

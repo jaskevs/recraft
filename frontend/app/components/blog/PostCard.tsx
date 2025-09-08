@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 import { H3, BodyText, Caption, Excerpt, ReadingTime } from "../ui/Typography";
+import { ArrowRightIcon, ClockIcon, CalendarIcon } from "@heroicons/react/24/outline";
 
 interface Post {
   id: string;
@@ -53,7 +54,8 @@ export const PostCard = ({
         <div className="flex flex-col space-y-3">
           {/* Meta information */}
           <div className="flex items-center space-x-4 text-sm text-primary-600">
-            <time dateTime={post.published_date}>
+            <time dateTime={post.published_date} className="inline-flex items-center gap-1">
+              <CalendarIcon className="w-4 h-4" />
               {formatDate(post.published_date)}
             </time>
             {wordCount > 0 && (
@@ -92,9 +94,7 @@ export const PostCard = ({
             className="inline-flex items-center text-accent-600 hover:text-accent-700 font-medium transition-colors duration-200"
           >
             Continue reading
-            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+            <ArrowRightIcon className="ml-2 w-4 h-4" />
           </Link>
         </div>
       </article>
@@ -120,7 +120,8 @@ export const PostCard = ({
           <div className="space-y-4">
             {/* Meta */}
             <div className="flex items-center space-x-4 text-sm text-primary-600">
-              <time dateTime={post.published_date}>
+              <time dateTime={post.published_date} className="inline-flex items-center gap-1">
+                <CalendarIcon className="w-4 h-4" />
                 {formatDate(post.published_date)}
               </time>
               {wordCount > 0 && (
@@ -183,7 +184,8 @@ export const PostCard = ({
         <div className="p-6 space-y-4">
           {/* Meta information */}
           <div className="flex items-center justify-between text-sm text-primary-600">
-            <time dateTime={post.published_date}>
+            <time dateTime={post.published_date} className="inline-flex items-center gap-1">
+              <CalendarIcon className="w-4 h-4" />
               {formatDate(post.published_date)}
             </time>
             {wordCount > 0 && <ReadingTime wordCount={wordCount} />}

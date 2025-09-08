@@ -1,7 +1,7 @@
 @"
-# Rehive Space Backend
+# reCraft Dev Backend
 
-Directus-powered headless CMS for rehive space
+Directus-powered headless CMS for recraft space
 
 ## Setup
 1. Copy `.env.example` to `.env` and adjust values

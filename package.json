@@ -1,5 +1,5 @@
 {
-  "name": "rehive-space-monorepo",
+  "name": "recraft-space-monorepo",
   "private": true,
   "workspaces": [
     "frontend"

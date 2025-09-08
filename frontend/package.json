@@ -1,15 +1,18 @@
 {
-  "name": "rehive-space-ui",
+  "name": "recraft-space-ui",
   "private": true,
-  "description": "Rehive space ui/frontend",
+  "description": "reCraft Dev ui/frontend",
   "version": "0.1.0",
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev",
-    "start": "remix-serve build"
+    "build": "remix vite:build",
+    "dev": "remix vite:dev --force",
+    "dev:clean": "if exist .vite rmdir /s /q .vite & if exist build rmdir /s /q build & npm run dev",
+    "start": "remix-serve build --port 4444",
+    "preview": "vite preview --port 4444"
   },
   "dependencies": {
     "@directus/sdk": "^18.0.3",
+    "@heroicons/react": "^2.2.0",
     "@remix-run/node": "^2.0.0",
     "@remix-run/react": "^2.0.0",
     "@remix-run/serve": "^2.0.0",
@@ -27,7 +30,8 @@
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vite": "^5.4.19"
   },
   "engines": {
     "node": ">=18.0.0"
