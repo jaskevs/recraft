@@ -1,47 +1,66 @@
-version: '3'
 services:
-  directus:
-    container_name: recraft-space-directus
-    image: directus/directus:10.0.0
-    ports:
-      - "8055:8055"
-    volumes:
-      - ./uploads:/directus/uploads
-      - ./extensions:/directus/extensions
-      - ./snapshots:/directus/snapshots
-    environment:
-      KEY: 'change-me-to-a-unique-key'
-      SECRET: 'change-me-to-a-unique-secret'
-      DB_CLIENT: 'mysql'
-      DB_HOST: 'mysql'
-      DB_PORT: '3306'
-      DB_DATABASE: 'directus'
-      DB_USER: 'directus'
-      DB_PASSWORD: 'directus'
-      ADMIN_EMAIL: 'admin@example.com'
-      ADMIN_PASSWORD: 'General@7'
-      CORS_ENABLED: 'true'
-      CORS_ORIGIN: '*'
-    depends_on:
-      - mysql
-    restart: unless-stopped
-
   mysql:
     container_name: recraft-space-mysql
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: 'root-password'
-      MYSQL_DATABASE: 'directus'
-      MYSQL_USER: 'directus'
-      MYSQL_PASSWORD: 'directus'
+      MYSQL_ROOT_PASSWORD: root-password
+      MYSQL_DATABASE: directus
+      MYSQL_USER: directus
+      MYSQL_PASSWORD: directus
     ports:
-      - "3306:3306"
+      - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-udirectus", "-pdirectus"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  directus:
+    container_name: recraft-space-directus
+    # Option A: use image tag (simplest)
+    image: directus/directus:10.13.1
+    # Option B: build your local Dockerfile instead of using the image
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    ports:
+      - 8055:8055
+    environment:
+      KEY: change-me-to-a-unique-key
+      SECRET: change-me-to-a-unique-secret
+      DB_CLIENT: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: directus
+      DB_USER: directus
+      DB_PASSWORD: directus
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: General@7
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "*"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8055/server/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    volumes:
+      # use named volumes to avoid Windows permission headaches
+      - directus_uploads:/directus/uploads
+      - directus_extensions:/directus/extensions
+      - directus_snapshots:/directus/snapshots
     restart: unless-stopped
 
 volumes:
   mysql_data:
-    driver: local
+  directus_uploads:
+  directus_extensions:
+  directus_snapshots:

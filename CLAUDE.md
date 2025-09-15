@@ -1,263 +1,192 @@
-# reCraft Blog - Claude AI Project Documentation
+# reCraft Blog - Project & Deployment Guide
 
-## Project Overview
-reCraft is a modern tech blog platform built with a headless CMS architecture. It combines Directus for content management with a Remix frontend for a performant, developer-friendly blogging solution.
+## Overview
+reCraft is a modern tech blog platform with headless CMS architecture, combining Directus for content management with a Remix frontend.
 
 ## Tech Stack
 
 ### Backend
-- **CMS**: Directus v10.0.0 (Headless CMS)
+- **CMS**: Directus v10.13.1
 - **Database**: MySQL 8.0
-- **Container**: Docker & Docker Compose
-- **API**: RESTful API with CORS enabled
-- **Storage**: Local file storage for uploads
+- **Runtime**: Docker containers
+- **API**: RESTful with CORS
 
 ### Frontend
-- **Framework**: Remix v2.0.0 (React-based)
-- **Styling**: TailwindCSS v3.3.0 with custom design system
-- **Typography**: @tailwindcss/typography plugin
-- **Fonts**: Josefin Sans (sans), Domine (serif)
-- **SDK**: @directus/sdk v18.0.3 for API communication
-- **Language**: TypeScript v5.0.0
+- **Framework**: Remix v2.0.0
+- **Runtime**: Node.js >= 18.0.0
+- **Build Tool**: Vite v5.4.19
+- **Styling**: TailwindCSS v3.3.0
+- **Server Port**: 4444
 
 ## Project Structure
 
 ```
 blog/
-├── backend/                    # Directus CMS backend
-│   ├── docker/                # Docker configuration files
-│   │   └── mysql/            # MySQL initialization scripts
-│   ├── extensions/           # Directus extensions (empty folders for customization)
-│   │   ├── displays/
-│   │   ├── endpoints/
-│   │   ├── hooks/
-│   │   ├── interfaces/
-│   │   ├── layouts/
-│   │   ├── modules/
-│   │   ├── operations/
-│   │   └── panels/
-│   ├── snapshots/            # Database snapshots
-│   ├── uploads/              # Media uploads directory
-│   ├── .env.example          # Environment variables template
-│   ├── docker-compose.yml    # Docker services configuration
-│   └── README.md
+├── backend/
+│   ├── docker/
+│   │   └── mysql/             # MySQL initialization scripts
+│   ├── extensions/            # Directus extensions (empty)
+│   ├── snapshots/             # Database snapshots
+│   ├── uploads/               # Media uploads
+│   ├── .dockerignore          # Docker build optimization
+│   ├── .env.example           # Environment template
+│   ├── docker-compose.yml     # Local development setup
+│   └── Dockerfile             # Dokploy deployment
 │
-├── frontend/                   # Remix frontend application
+├── frontend/
 │   ├── app/
-│   │   ├── components/       # React components
-│   │   │   ├── blog/        # Blog-specific components
-│   │   │   │   └── PostCard.tsx
-│   │   │   ├── home/        # Homepage components
-│   │   │   │   └── HeroSection.tsx
-│   │   │   ├── layout/      # Layout components
-│   │   │   │   └── Navigation.tsx
-│   │   │   └── ui/          # UI components
-│   │   │       └── Typography.tsx
-│   │   ├── lib/             # Library integrations
-│   │   │   └── directus.ts  # Directus SDK configuration
-│   │   ├── routes/          # Remix routes
-│   │   │   ├── _index.tsx   # Homepage
-│   │   │   ├── about.tsx    # About page
-│   │   │   ├── blog._index.tsx  # Blog listing
-│   │   │   ├── blog.$slug.tsx   # Individual blog post
-│   │   │   └── contact.tsx  # Contact page
-│   │   ├── styles/          # CSS styles
-│   │   │   └── tailwind.css
-│   │   ├── types/           # TypeScript type definitions
-│   │   │   └── css.d.ts
-│   │   ├── utils/           # Utility functions
-│   │   │   └── env.server.ts    # Server environment variables
-│   │   └── root.tsx         # Root layout component
-│   ├── build/               # Production build output
-│   ├── public/              # Static assets
-│   ├── package.json         # Frontend dependencies
-│   ├── tailwind.config.ts   # Tailwind configuration
-│   ├── postcss.config.ts    # PostCSS configuration
-│   └── tsconfig.json        # TypeScript configuration
+│   │   ├── components/        # React components
+│   │   ├── lib/              # Directus SDK integration
+│   │   ├── routes/           # Remix routes
+│   │   ├── styles/           # CSS/Tailwind
+│   │   ├── types/            # TypeScript definitions
+│   │   ├── utils/            # Utilities
+│   │   └── root.tsx          # Root layout
+│   ├── build/                # Production output
+│   ├── public/               # Static assets
+│   ├── .dockerignore         # Docker build optimization
+│   ├── Dockerfile            # Dokploy deployment
+│   ├── package.json          # Dependencies
+│   ├── remix.config.js       # Remix config
+│   ├── tailwind.config.ts    # Tailwind config
+│   ├── tsconfig.json         # TypeScript config
+│   └── vite.config.ts        # Vite config
 │
-├── template/                   # Template files (if any)
-├── package.json               # Root monorepo configuration
-├── package-lock.json
-├── LICENSE                    # MIT License
-├── README.md                  # Project documentation
-└── .gitignore                # Git ignore rules
+├── scripts/                  # Build scripts
+├── package.json             # Monorepo root
+├── LICENSE                  # MIT License
+└── README.md               # Documentation
 ```
-
-## Key Features
-
-### Content Management
-- **Directus CMS**: Provides a powerful admin interface for content management
-- **Post Schema**: 
-  - id, title, slug, content, excerpt
-  - featured_image, status (draft/published)
-  - date_created, date_updated
-- **API Access**: RESTful API at http://localhost:8055
-
-### Frontend Features
-- **Dynamic Routing**: Blog posts accessible via `/blog/[slug]`
-- **Responsive Design**: Mobile-first approach with TailwindCSS
-- **SEO Optimized**: Meta tags, structured data support
-- **Performance**: Server-side rendering with Remix
-- **Typography**: Professional typography system for blog content
-
-### Design System
-- **Colors**:
-  - Primary: Grayscale palette for text and UI
-  - Accent: Warm gold/bronze (#C19B6A) for highlights
-  - Surface: Light backgrounds (#FEFEFE to #F5F5F5)
-- **Fonts**:
-  - Headers: Josefin Sans
-  - Body: Josefin Sans
-  - Code: Monaco/Consolas
-- **Components**: Modular component architecture
-- **Animations**: Subtle fade-in, slide-up, and scale-in effects
 
 ## Development Setup
 
-### Prerequisites
-- Node.js >= 18.0.0
-- Docker & Docker Compose
-- npm or yarn
-
-### Quick Start Commands
-
+### Commands
 ```bash
 # Install dependencies
 npm install
 
-# Start backend (Directus + MySQL)
+# Start backend (Docker Compose)
 npm run start:backend
 
-# Start frontend development server
+# Start frontend dev server
 npm run start:frontend
 
-# Or start both
-npm start
-
-# Build for production
+# Build production
 npm run build
 
-# Clean all generated files and containers
+# Clean everything
 npm run clean
 ```
 
+### Local Development Configuration
+
+**Backend** (`backend/docker-compose.yml`):
+- Uses named volumes for Windows compatibility
+- MySQL with health checks
+- Directus v10.13.1 image
+- Ports: 8055 (Directus), 3306 (MySQL)
+
+**Frontend Environment**:
+```javascript
+// frontend/app/utils/env.server.ts
+DIRECTUS_URL: process.env.DIRECTUS_URL || 'http://localhost:8055'
+```
+
+## Dokploy Deployment
+
+### Configuration Files
+
+**Backend Dockerfile**:
+- Base: directus/directus:10.13.1
+- Port: 8055
+- User: node (non-root)
+- Volumes: uploads, extensions, snapshots
+
+**Frontend Dockerfile**:
+- Base: node:18-alpine
+- Multi-stage build
+- Port: 4444
+- User: remix (non-root)
+
 ### Environment Variables
 
-Backend (.env):
-```
-KEY=change-me-to-a-unique-key
-SECRET=change-me-to-a-unique-secret
-ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=General@7
+**Backend (Dokploy)**:
+```env
+# Security
+KEY=your-32-char-production-key
+SECRET=your-32-char-production-secret
+
+# Admin
+ADMIN_EMAIL=admin@yourdomain.com
+ADMIN_PASSWORD=secure-password
+
+# Database (Dokploy MySQL)
 DB_CLIENT=mysql
-DB_HOST=mysql
+DB_HOST=recraft-mysql-bmrzp1
 DB_PORT=3306
-DB_DATABASE=directus
-DB_USER=directus
-DB_PASSWORD=directus
+DB_DATABASE=recraft-directus-db
+DB_USER=recraft-directus-user
+DB_PASSWORD=General@7
+
+# CORS
 CORS_ENABLED=true
-CORS_ORIGIN=*
+CORS_ORIGIN=https://your-frontend-domain.com
+
+# Storage
+STORAGE_LOCATIONS=local
+STORAGE_LOCAL_PUBLIC_URL=/uploads
 ```
 
-Frontend (env.server.ts):
-- `DIRECTUS_URL`: Default http://localhost:8055
+**Frontend (Dokploy)**:
+```env
+DIRECTUS_URL=https://your-backend-domain.com
+NODE_ENV=production
+```
 
-## Docker Services
+### Deployment Steps
 
-### Directus Container
-- **Name**: recraft-space-directus
-- **Port**: 8055
-- **Volumes**: uploads, extensions, snapshots
+1. **Backend Service**:
+   - Create application in Dokploy
+   - Set build context: `/backend`
+   - Configure environment variables
+   - Deploy on port 8055
 
-### MySQL Container
-- **Name**: recraft-space-mysql
-- **Port**: 3306
-- **Database**: directus
-- **Persistent Volume**: mysql_data
+2. **Frontend Service**:
+   - Create second application
+   - Set build context: `/frontend`
+   - Configure DIRECTUS_URL
+   - Deploy on port 4444
 
 ## API Integration
 
-The frontend uses `@directus/sdk` to communicate with the backend:
-
-### Key Functions (frontend/app/lib/directus.ts)
-- `getPosts()`: Fetch all published posts
-- `getPost(slug)`: Fetch single post by slug
+**Directus SDK** (`frontend/app/lib/directus.ts`):
+- `getPosts()`: Fetch published posts
+- `getPost(slug)`: Fetch single post
 - `getAssetUrl(assetId)`: Generate asset URLs
-
-### Data Flow
-1. Content created in Directus Admin (http://localhost:8055/admin)
-2. Stored in MySQL database
-3. Accessed via Directus REST API
-4. Consumed by Remix frontend using SDK
-5. Server-side rendered and sent to browser
 
 ## Routes
 
-### Public Routes
-- `/` - Homepage with hero section
-- `/blog` - Blog listing page
-- `/blog/[slug]` - Individual blog post
+**Public**:
+- `/` - Homepage
+- `/blog` - Blog listing
+- `/blog/[slug]` - Blog post
 - `/about` - About page
 - `/contact` - Contact page
+- `/search` - Search
 
-### Admin Routes
-- `http://localhost:8055/admin` - Directus admin panel
+**Admin**:
+- `http://localhost:8055/admin` - Directus panel
 
-## Current Status
-- **Branch**: settingup
-- **Main Branch**: main
-- **Recent Changes**: Initial structure setup, Remix integration
+## Health Monitoring
 
-## Development Tips
+- **Backend**: `/server/health`
+- **Frontend**: Root endpoint (`/`)
+- **Docker**: Built-in health checks with 30s intervals
 
-1. **Adding New Content Types**: Create collections in Directus admin
-2. **Customizing Frontend**: Modify components in `frontend/app/components`
-3. **Styling Changes**: Update `tailwind.config.ts` for design system changes
-4. **API Changes**: Update types in `frontend/app/lib/directus.ts`
-5. **Environment**: Use `.env.example` as template for local `.env`
+## Notes
 
-## Common Tasks
-
-### Creating a New Blog Post
-1. Access Directus admin at http://localhost:8055/admin
-2. Navigate to Posts collection
-3. Create new post with title, slug, content
-4. Set status to "published"
-5. Post appears on frontend at `/blog/[slug]`
-
-### Modifying Styles
-- Global styles: `frontend/app/styles/tailwind.css`
-- Component styles: Use Tailwind utility classes
-- Theme customization: `frontend/tailwind.config.ts`
-
-### Adding New Routes
-1. Create new file in `frontend/app/routes/`
-2. Export default component
-3. Route automatically available at corresponding URL
-
-## Troubleshooting
-
-### Backend Issues
-- Check Docker containers: `docker ps`
-- View logs: `docker-compose logs directus`
-- Reset database: `docker-compose down -v && docker-compose up`
-
-### Frontend Issues
-- Clear cache: `rm -rf frontend/.cache frontend/build`
-- Reinstall deps: `cd frontend && npm install`
-- Check env vars in `frontend/app/utils/env.server.ts`
-
-## Future Enhancements
-- Add authentication for protected routes
-- Implement comment system
-- Add search functionality
-- Set up CI/CD pipeline
-- Add analytics integration
-- Implement RSS feed
-- Add sitemap generation
-
-## Resources
-- [Directus Documentation](https://docs.directus.io)
-- [Remix Documentation](https://remix.run/docs)
-- [TailwindCSS Documentation](https://tailwindcss.com/docs)
-- [Docker Documentation](https://docs.docker.com)
+- Local development uses Docker Compose with named volumes
+- Dokploy deployment uses separate Dockerfiles
+- Both setups coexist without conflict
+- Frontend builds with Vite, serves with remix-serve
+- All containers run as non-root users for security
