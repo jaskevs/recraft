@@ -10,8 +10,12 @@ lerna-debug.log*
 .DS_Store
 
 # Backend
-/backend/uploads
-/backend/extensions/*/node_modules
+/backend/uploads/*
+!/backend/uploads/.gitkeep
+/backend/extensions/*
+!/backend/extensions/.gitkeep  
+/backend/snapshots/*
+!/backend/snapshots/.gitkeep
 
 # Frontend
 /frontend/.cache
