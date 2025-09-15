@@ -1,61 +1,22 @@
-# Development files
-node_modules
-npm-debug.log*
-.npm
-
-# Docker files for local development
-docker-compose.yml
-docker/
-
-# Git
+# Git & VCS
 .git
 .gitignore
 
-# Environment files (will be provided by Dokploy)
-.env
-.env.local
-.env.production
-
-# Documentation
-README.md
-*.md
-
-# Logs
-logs
-*.log
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
+# Node & build junk
+node_modules
+npm-debug.log*
+.yarn-integrity
+.cache
+build
 coverage
-
-# Dependency directories
-node_modules/
-
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
 *.tgz
 
-# Yarn Integrity file
-.yarn-integrity
-
-# macOS
+# IDE/system
+.vscode
+.idea
 .DS_Store
-
-# Windows
 Thumbs.db
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Local env files (Dokploy will inject env)
+.env
+.env.*

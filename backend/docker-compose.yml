@@ -4,17 +4,17 @@ services:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: root-password
-      MYSQL_DATABASE: directus
-      MYSQL_USER: directus
-      MYSQL_PASSWORD: directus
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-password}
+      MYSQL_DATABASE: ${DB_DATABASE:-directus}
+      MYSQL_USER: ${DB_USER:-directus}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-directus}
+      TZ: ${TZ:-Australia/Melbourne}
     ports:
-      - 3306:3306
+      - "${MYSQL_HOST_PORT:-3306}:3306"   # change MYSQL_HOST_PORT to avoid clashes if needed
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-udirectus", "-pdirectus"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "${DB_USER:-directus}", "-p${DB_PASSWORD:-directus}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -22,41 +22,45 @@ services:
 
   directus:
     container_name: recraft-space-directus
-    # Option A: use image tag (simplest)
     image: directus/directus:10.13.1
-    # Option B: build your local Dockerfile instead of using the image
+    # If you want to test the Dockerfile locally, comment the image: line and uncomment below:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    ports:
-      - 8055:8055
     environment:
-      KEY: change-me-to-a-unique-key
-      SECRET: change-me-to-a-unique-secret
+      KEY: ${KEY:-local-key-change-me-32chars-min}
+      SECRET: ${SECRET:-local-secret-change-me-32chars-min}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-General@7}
       DB_CLIENT: mysql
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_DATABASE: directus
-      DB_USER: directus
-      DB_PASSWORD: directus
-      ADMIN_EMAIL: admin@example.com
-      ADMIN_PASSWORD: General@7
-      CORS_ENABLED: "true"
-      CORS_ORIGIN: "*"
+      DB_DATABASE: ${DB_DATABASE:-directus}
+      DB_USER: ${DB_USER:-directus}
+      DB_PASSWORD: ${DB_PASSWORD:-directus}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8055}
+      CORS_ENABLED: ${CORS_ENABLED:-true}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000,http://localhost:5173}
+      STORAGE_LOCATIONS: local
+      STORAGE_LOCAL_DRIVER: local
+      STORAGE_LOCAL_ROOT: /directus/uploads
+      STORAGE_LOCAL_PUBLIC_URL: /uploads
+      TZ: ${TZ:-Australia/Melbourne}
     depends_on:
       mysql:
         condition: service_healthy
+    ports:
+      - "${DIRECTUS_HOST_PORT:-8055}:8055"
+    volumes:
+      - directus_uploads:/directus/uploads
+      - directus_extensions:/directus/extensions
+      - directus_snapshots:/directus/snapshots
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8055/server/health"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8055/server/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
-    volumes:
-      # use named volumes to avoid Windows permission headaches
-      - directus_uploads:/directus/uploads
-      - directus_extensions:/directus/extensions
-      - directus_snapshots:/directus/snapshots
     restart: unless-stopped
 
 volumes:

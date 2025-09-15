@@ -1,30 +1,16 @@
-# Dockerfile for Dokploy deployment
+# backend/Dockerfile
 FROM directus/directus:10.13.1
 
-# Switch to root for file operations
+# Prepare standard folders (harmless if volumes are mounted)
 USER root
-
-# Create necessary directories
-RUN mkdir -p /directus/uploads /directus/extensions /directus/snapshots
-
-# Copy uploads and extensions directories (if they exist)
-COPY --chown=node:node ./uploads /directus/uploads
-COPY --chown=node:node ./extensions /directus/extensions
-COPY --chown=node:node ./snapshots /directus/snapshots
-
-# Set proper permissions
-RUN chown -R node:node /directus/uploads /directus/extensions /directus/snapshots
-RUN chmod -R 755 /directus/uploads /directus/extensions /directus/snapshots
-
-# Switch back to node user for security
+RUN mkdir -p /directus/uploads /directus/extensions /directus/snapshots \
+ && chown -R node:node /directus
 USER node
 
-# Expose port
 EXPOSE 8055
 
-# Health check
+# Healthcheck without needing curl/wget
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8055/server/health || exit 1
+  CMD node -e "fetch('http://localhost:8055/server/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
-# Use the default Directus entrypoint and command
 CMD ["npx", "directus", "start"]

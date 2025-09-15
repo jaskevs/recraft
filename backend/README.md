@@ -1,15 +1,26 @@
-@"
-# reCraft Dev Backend
+# Recraft Backend (Directus)
 
-Directus-powered headless CMS for recraft space
+## Local Development
 
-## Setup
-1. Copy `.env.example` to `.env` and adjust values
-2. Run `docker-compose up -d`
-3. Access Directus admin panel at http://localhost:8055
+1. Create env:
+   ```bash
+   cd backend
+   copy .env.example.local .env   # or cp on macOS/Linux
 
-## Structure
-- `/docker`: Docker configuration files
-- `/snapshots`: Directus schema snapshots for version control
-- `/extensions`: Custom Directus extensions
-"@ | Out-File -FilePath "backend\README.md" -Encoding utf8
+2. Start:
+
+docker compose up -d
+
+3. Open:
+
+Directus: http://localhost:8055
+
+Health: http://localhost:8055/server/health → {"status":"ok"}
+
+4. To stop:
+
+docker compose down
+
+5. To reset data (nukes local DB & uploads):
+
+docker compose down -v
