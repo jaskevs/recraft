@@ -3,6 +3,10 @@ FROM directus/directus:10.13.1
 USER root
 RUN mkdir -p /directus/uploads /directus/extensions /directus/snapshots \
  && chown -R node:node /directus
+
+# ⬇️ bake the committed schema snapshot (if present)
+COPY --chown=node:node snapshots /directus/snapshots
+
 COPY --chown=node:node entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 USER node

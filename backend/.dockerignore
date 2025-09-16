@@ -20,3 +20,6 @@ Thumbs.db
 # Local env files (Dokploy will inject env)
 .env
 .env.*
+
+!snapshots/**
+!entrypoint.sh
