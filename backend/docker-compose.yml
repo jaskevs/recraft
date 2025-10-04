@@ -1,20 +1,18 @@
 services:
-  mysql:
-    container_name: recraft-space-mysql
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
+  postgres:
+    container_name: recraft-space-postgres
+    image: postgres:16-alpine
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root-password}
-      MYSQL_DATABASE: ${DB_DATABASE:-directus}
-      MYSQL_USER: ${DB_USER:-directus}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-directus}
+      POSTGRES_USER: ${POSTGRES_USER:-directus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-directus}
+      POSTGRES_DB: ${POSTGRES_DB:-directus}
       TZ: ${TZ:-Australia/Melbourne}
     ports:
-      - "${MYSQL_HOST_PORT:-3306}:3306"   # change MYSQL_HOST_PORT to avoid clashes if needed
+      - "${POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "${DB_USER:-directus}", "-p${DB_PASSWORD:-directus}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-directus}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -22,32 +20,33 @@ services:
 
   directus:
     container_name: recraft-space-directus
-    image: directus/directus:10.13.1
-    # If you want to test the Dockerfile locally, comment the image: line and uncomment below:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    image: recraft-space-directus:local
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       KEY: ${KEY:-local-key-change-me-32chars-min}
       SECRET: ${SECRET:-local-secret-change-me-32chars-min}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-General@7}
-      DB_CLIENT: mysql
-      DB_HOST: mysql
-      DB_PORT: 3306
-      DB_DATABASE: ${DB_DATABASE:-directus}
-      DB_USER: ${DB_USER:-directus}
-      DB_PASSWORD: ${DB_PASSWORD:-directus}
+      # Directus will use DATABASE_URL if provided (for Render), otherwise fall back to individual vars
+      DATABASE_URL: ${DATABASE_URL:-}
+      DB_CLIENT: postgres
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${POSTGRES_DB:-directus}
+      DB_USER: ${POSTGRES_USER:-directus}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-directus}
       PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8055}
       CORS_ENABLED: ${CORS_ENABLED:-true}
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000,http://localhost:5173}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000,http://localhost:5173,http://localhost:4444}
       STORAGE_LOCATIONS: local
       STORAGE_LOCAL_DRIVER: local
       STORAGE_LOCAL_ROOT: /directus/uploads
       STORAGE_LOCAL_PUBLIC_URL: /uploads
       TZ: ${TZ:-Australia/Melbourne}
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
     ports:
       - "${DIRECTUS_HOST_PORT:-8055}:8055"
@@ -64,7 +63,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  mysql_data:
+  postgres_data:
   directus_uploads:
   directus_extensions:
   directus_snapshots:
