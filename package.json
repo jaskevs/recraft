@@ -10,8 +10,7 @@
     "start": "npm run start:backend && npm run start:frontend",
     "build": "cd frontend && npm run build",
     "clean": "cd backend && docker compose down -v && cd ../frontend && rd /s /q .cache build node_modules",
-    "schema:snapshot": "docker compose -f backend/docker-compose.yml exec directus npx directus schema snapshot /directus/snapshots/schema.yaml && docker cp recraft-space-directus:/directus/snapshots/schema.yaml backend/snapshots/schema.yaml",
-    "schema:apply:local": "docker cp backend/snapshots/schema.yaml recraft-space-directus:/directus/snapshots/schema.yaml && docker compose -f backend/docker-compose.yml exec directus npx directus schema apply /directus/snapshots/schema.yaml --yes",
-    "seed": "docker compose -f backend/docker-compose.yml exec directus node /directus/scripts/seed.cjs"
+    "schema:snapshot": "docker compose -f backend/docker-compose.yml exec directus npx directus schema snapshot /directus/snapshots/schema.yaml && docker compose -f backend/docker-compose.yml cp directus:/directus/snapshots/schema.yaml backend/snapshots/schema.yaml",
+    "schema:apply:local": "docker compose -f backend/docker-compose.yml cp backend/snapshots/schema.yaml directus:/directus/snapshots/schema.yaml && docker compose -f backend/docker-compose.yml exec directus npx directus schema apply /directus/snapshots/schema.yaml --yes"
   }
 }

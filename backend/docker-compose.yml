@@ -1,6 +1,5 @@
 services:
   postgres:
-    container_name: recraft-space-postgres
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-directus}
@@ -19,7 +18,6 @@ services:
     restart: unless-stopped
 
   directus:
-    container_name: recraft-space-directus
     image: recraft-space-directus:local
     build:
       context: .
