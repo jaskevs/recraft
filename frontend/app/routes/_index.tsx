@@ -2,12 +2,16 @@ import type { MetaFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, Link } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { getAssetUrl, getPosts, type Post } from "../lib/directus";
-import { CalendarIcon, ClockIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { Calendar, Clock, ArrowRight } from "react-feather";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "reCraft — Thoughtful writing on design & technology" },
-    { name: "description", content: "A minimalist blog focused on design, technology, and thoughtful perspectives." },
+    { title: "reCraft - Thoughtful writing on design & technology" },
+    {
+      name: "description",
+      content:
+        "A minimalist blog focused on design, technology, and thoughtful perspectives.",
+    },
   ];
 };
 
@@ -17,7 +21,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return json({ posts, success: true, error: null as string | null });
   } catch (error) {
     console.error("Error fetching posts:", error);
-    return json({ posts: [] as Post[], success: false, error: "Failed to fetch posts" });
+    return json({
+      posts: [] as Post[],
+      success: false,
+      error: "Failed to fetch posts",
+    });
   }
 };
 
@@ -28,10 +36,10 @@ export default function Index() {
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -44,7 +52,8 @@ export default function Index() {
             <strong>reCraft</strong> — Thoughtful writing on design & technology
           </h1>
           <p>
-            Exploring the intersection of creativity, functionality, and human experience through minimal design and clear thinking.
+            Exploring the intersection of creativity, functionality, and human
+            experience through minimal design and clear thinking.
           </p>
         </div>
       </section>
@@ -52,74 +61,126 @@ export default function Index() {
       {/* Main Content */}
       <section className="minimal-content">
         <div className="container">
-          
           {!success && (
-            <div style={{ 
-              textAlign: 'center', 
-              padding: '4rem 0', 
-              color: 'var(--color-dark-gray)' 
-            }}>
-              <p>Unable to load posts. Please ensure Directus is running at localhost:8055.</p>
+            <div
+              style={{
+                textAlign: "center",
+                padding: "4rem 0",
+                color: "var(--color-dark-gray)",
+              }}
+            >
+              <p>
+                Unable to load posts. Please ensure Directus is running at
+                localhost:8055.
+              </p>
             </div>
           )}
 
           {posts.length === 0 && success ? (
-            <div style={{ 
-              textAlign: 'center', 
-              padding: '4rem 0', 
-              color: 'var(--color-dark-gray)' 
-            }}>
-              <p>No posts found. Create some posts in Directus and make sure they're published.</p>
+            <div
+              style={{
+                textAlign: "center",
+                padding: "4rem 0",
+                color: "var(--color-dark-gray)",
+              }}
+            >
+              <p>
+                No posts found. Create some posts in Directus and make sure
+                they're published.
+              </p>
             </div>
           ) : (
             <>
-              <div style={{ textAlign: 'center', marginBottom: 'var(--space-3xl)' }}>
-                <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 500, marginBottom: 'var(--space-sm)' }}>
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "var(--space-3xl)",
+                }}
+              >
+                <h2
+                  style={{
+                    fontSize: "var(--text-2xl)",
+                    fontWeight: 500,
+                    marginBottom: "var(--space-sm)",
+                  }}
+                >
                   Latest Posts
                 </h2>
-                <p style={{ color: 'var(--color-dark-gray)' }}>
+                <p style={{ color: "var(--color-dark-gray)" }}>
                   Recent thoughts and insights
                 </p>
               </div>
 
               <div className="minimal-blog-grid">
                 {posts.slice(0, 6).map((post: Post) => (
-                  <Link 
-                    key={post.id} 
-                    to={`/blog/${post.slug}`} 
+                  <Link
+                    key={post.id}
+                    to={`/blog/${post.slug}`}
                     className="minimal-post-card"
                   >
                     {post.featured_image && (
-                      <img 
-                        src={getAssetUrl(post.featured_image, 400, 240, 80)}
+                      <img
+                        src={getAssetUrl(post.featured_image, 800, undefined, 85) || ''}
                         alt={post.title}
                         className="minimal-post-image"
                         onError={(e) => {
-                          console.log('Image failed to load:', post.featured_image);
-                          console.log('Generated URL:', getAssetUrl(post.featured_image, 400, 240, 80));
-                          e.currentTarget.style.display = 'none';
+                          console.log(
+                            "Image failed to load:",
+                            post.featured_image
+                          );
+                          console.log(
+                            "Generated URL:",
+                            getAssetUrl(post.featured_image, 400, 240, 80)
+                          );
+                          e.currentTarget.style.display = "none";
                         }}
                       />
                     )}
                     <div className="minimal-post-content">
                       <div className="minimal-post-meta">
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <CalendarIcon style={{ width: '14px', height: '14px' }} />
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "0.25rem",
+                          }}
+                        >
+                          <Calendar
+                            size={14}
+                            strokeWidth={1.6}
+                            aria-hidden="true"
+                          />
                           {formatDate(post.date_created)}
                         </span>
                         <span>·</span>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <ClockIcon style={{ width: '14px', height: '14px' }} />
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "0.25rem",
+                          }}
+                        >
+                          <Clock
+                            size={14}
+                            strokeWidth={1.6}
+                            aria-hidden="true"
+                          />
                           Read
                         </span>
                       </div>
                       <h3 className="minimal-post-title">{post.title}</h3>
                       <p className="minimal-post-excerpt">
-                        {post.excerpt || "Continue reading to discover more insights and perspectives..."}
+                        {post.excerpt ||
+                          "Continue reading to discover more insights and perspectives..."}
                       </p>
                       <div className="minimal-read-more">
-                        Read article 
-                        <ArrowRightIcon style={{ width: '16px', height: '16px', marginLeft: '0.5rem' }} />
+                        Read article
+                        <ArrowRight
+                          size={16}
+                          strokeWidth={1.6}
+                          style={{ marginLeft: "0.5rem" }}
+                          aria-hidden="true"
+                        />
                       </div>
                     </div>
                   </Link>
@@ -127,29 +188,32 @@ export default function Index() {
               </div>
 
               {posts.length > 6 && (
-                <div style={{ 
-                  textAlign: 'center', 
-                  marginTop: 'var(--space-3xl)', 
-                  padding: 'var(--space-2xl) 0' 
-                }}>
-                  <Link 
-                    to="/blog" 
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginTop: "var(--space-3xl)",
+                    padding: "var(--space-2xl) 0",
+                  }}
+                >
+                  <Link
+                    to="/blog"
                     style={{
-                      display: 'inline-block',
-                      padding: '0.75rem 2rem',
-                      border: '1px solid var(--color-black)',
-                      color: 'var(--color-black)',
+                      display: "inline-block",
+                      padding: "0.75rem 2rem",
+                      border: "1px solid var(--color-black)",
+                      color: "var(--color-black)",
                       fontWeight: 500,
-                      transition: 'all var(--transition-base)',
-                      textDecoration: 'none'
+                      transition: "all var(--transition-base)",
+                      textDecoration: "none",
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = 'var(--color-black)';
-                      e.currentTarget.style.color = 'var(--color-pure-white)';
+                      e.currentTarget.style.backgroundColor =
+                        "var(--color-black)";
+                      e.currentTarget.style.color = "var(--color-pure-white)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.color = 'var(--color-black)';
+                      e.currentTarget.style.backgroundColor = "transparent";
+                      e.currentTarget.style.color = "var(--color-black)";
                     }}
                   >
                     View all posts
@@ -158,7 +222,6 @@ export default function Index() {
               )}
             </>
           )}
-
         </div>
       </section>
     </>

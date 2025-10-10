@@ -1,6 +1,6 @@
 import { Link } from "@remix-run/react";
 import { H3, BodyText, Caption, Excerpt, ReadingTime } from "../ui/Typography";
-import { ArrowRightIcon, ClockIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import { ArrowRight, Clock, Calendar } from "react-feather";
 
 interface Post {
   id: string;
@@ -26,19 +26,19 @@ interface PostCardProps {
   className?: string;
 }
 
-export const PostCard = ({ 
-  post, 
-  layout = "card", 
-  showImage = true, 
+export const PostCard = ({
+  post,
+  layout = "card",
+  showImage = true,
   showExcerpt = true,
-  className = "" 
+  className = "",
 }: PostCardProps) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -50,12 +50,17 @@ export const PostCard = ({
 
   if (layout === "list") {
     return (
-      <article className={`group py-8 border-b border-border-light last:border-b-0 ${className}`}>
+      <article
+        className={`group py-8 border-b border-border-light last:border-b-0 ${className}`}
+      >
         <div className="flex flex-col space-y-3">
           {/* Meta information */}
           <div className="flex items-center space-x-4 text-sm text-primary-600">
-            <time dateTime={post.published_date} className="inline-flex items-center gap-1">
-              <CalendarIcon className="w-4 h-4" />
+            <time
+              dateTime={post.published_date}
+              className="inline-flex items-center gap-1"
+            >
+              <Calendar size={16} strokeWidth={1.6} aria-hidden="true" />
               {formatDate(post.published_date)}
             </time>
             {wordCount > 0 && (
@@ -81,20 +86,25 @@ export const PostCard = ({
 
           {/* Excerpt */}
           {showExcerpt && (post.excerpt || post.content) && (
-            <Excerpt 
-              content={post.excerpt || post.content || ""} 
+            <Excerpt
+              content={post.excerpt || post.content || ""}
               maxLength={180}
               className="text-primary-600"
             />
           )}
 
           {/* Read more link */}
-          <Link 
+          <Link
             to={`/blog/${post.slug}`}
             className="inline-flex items-center text-accent-600 hover:text-accent-700 font-medium transition-colors duration-200"
           >
             Continue reading
-            <ArrowRightIcon className="ml-2 w-4 h-4" />
+            <ArrowRight
+              size={16}
+              strokeWidth={1.6}
+              style={{ marginLeft: "0.5rem" }}
+              aria-hidden="true"
+            />
           </Link>
         </div>
       </article>
@@ -120,8 +130,11 @@ export const PostCard = ({
           <div className="space-y-4">
             {/* Meta */}
             <div className="flex items-center space-x-4 text-sm text-primary-600">
-              <time dateTime={post.published_date} className="inline-flex items-center gap-1">
-                <CalendarIcon className="w-4 h-4" />
+              <time
+                dateTime={post.published_date}
+                className="inline-flex items-center gap-1"
+              >
+                <Calendar size={16} strokeWidth={1.6} aria-hidden="true" />
                 {formatDate(post.published_date)}
               </time>
               {wordCount > 0 && (
@@ -139,8 +152,8 @@ export const PostCard = ({
 
             {/* Excerpt */}
             {showExcerpt && (post.excerpt || post.content) && (
-              <Excerpt 
-                content={post.excerpt || post.content || ""} 
+              <Excerpt
+                content={post.excerpt || post.content || ""}
                 maxLength={220}
                 className="text-lg text-primary-600"
               />
@@ -167,7 +180,9 @@ export const PostCard = ({
 
   // Default card layout
   return (
-    <article className={`group bg-surface-50 rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-lg transition-all duration-300 ${className}`}>
+    <article
+      className={`group bg-surface-50 rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-lg transition-all duration-300 ${className}`}
+    >
       <Link to={`/blog/${post.slug}`} className="block">
         {/* Featured Image */}
         {showImage && post.featured_image && (
@@ -184,8 +199,11 @@ export const PostCard = ({
         <div className="p-6 space-y-4">
           {/* Meta information */}
           <div className="flex items-center justify-between text-sm text-primary-600">
-            <time dateTime={post.published_date} className="inline-flex items-center gap-1">
-              <CalendarIcon className="w-4 h-4" />
+            <time
+              dateTime={post.published_date}
+              className="inline-flex items-center gap-1"
+            >
+              <Calendar size={16} strokeWidth={1.6} aria-hidden="true" />
               {formatDate(post.published_date)}
             </time>
             {wordCount > 0 && <ReadingTime wordCount={wordCount} />}
@@ -198,8 +216,8 @@ export const PostCard = ({
 
           {/* Excerpt */}
           {showExcerpt && (post.excerpt || post.content) && (
-            <Excerpt 
-              content={post.excerpt || post.content || ""} 
+            <Excerpt
+              content={post.excerpt || post.content || ""}
               maxLength={140}
               className="text-primary-600"
             />
@@ -224,7 +242,7 @@ export const PostCard = ({
             <span className="text-accent-600 hover:text-accent-700 font-medium transition-colors duration-200 group-hover:translate-x-1">
               Read more →
             </span>
-            
+
             {/* Author info if available */}
             {post.author && (
               <div className="flex items-center space-x-2">

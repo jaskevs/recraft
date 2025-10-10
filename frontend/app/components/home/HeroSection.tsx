@@ -15,7 +15,7 @@ export const HeroSection = ({
   description = "Thoughtful writing about technology, development, and the craft of creating digital experiences that matter.",
   showScrollIndicator = true,
   backgroundType = "gradient",
-  className = ""
+  className = "",
 }: HeroSectionProps) => {
   const getBackgroundClass = () => {
     switch (backgroundType) {
@@ -37,9 +37,7 @@ export const HeroSection = ({
             <H1 className="font-serif text-5xl md:text-6xl lg:text-7xl">
               {title}
             </H1>
-            <LeadText className="max-w-2xl mx-auto">
-              {subtitle}
-            </LeadText>
+            <LeadText className="max-w-2xl mx-auto">{subtitle}</LeadText>
           </div>
 
           {/* Description */}
@@ -56,8 +54,18 @@ export const HeroSection = ({
               className="group inline-flex items-center px-6 py-3 bg-accent-600 text-white rounded-xl hover:bg-accent-700 transition-all duration-200 shadow-soft hover:shadow-soft-lg"
             >
               <span className="font-medium">Start Reading</span>
-              <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              <svg
+                className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-200"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
               </svg>
             </a>
             <a
@@ -79,8 +87,18 @@ export const HeroSection = ({
             aria-label="Scroll to content"
           >
             <span className="text-sm font-medium mb-2">Scroll</span>
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
             </svg>
           </a>
         </div>
@@ -97,14 +115,16 @@ interface MinimalHeroProps {
   className?: string;
 }
 
-export const MinimalHero = ({ 
-  title, 
-  subtitle, 
+export const MinimalHero = ({
+  title,
+  subtitle,
   breadcrumbs,
-  className = "" 
+  className = "",
 }: MinimalHeroProps) => {
   return (
-    <section className={`bg-surface-50 border-b border-border-light ${className}`}>
+    <section
+      className={`bg-surface-50 border-b border-border-light ${className}`}
+    >
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="max-w-4xl mx-auto">
           {/* Breadcrumbs */}
@@ -114,19 +134,31 @@ export const MinimalHero = ({
                 {breadcrumbs.map((crumb, index) => (
                   <li key={index} className="flex items-center">
                     {index > 0 && (
-                      <svg className="w-4 h-4 mx-2 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      <svg
+                        className="w-4 h-4 mx-2 text-primary-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     )}
                     {crumb.href ? (
-                      <a 
+                      <a
                         href={crumb.href}
                         className="hover:text-accent-600 transition-colors duration-200"
                       >
                         {crumb.label}
                       </a>
                     ) : (
-                      <span className="text-primary-900 font-medium">{crumb.label}</span>
+                      <span className="text-primary-900 font-medium">
+                        {crumb.label}
+                      </span>
                     )}
                   </li>
                 ))}
@@ -138,9 +170,7 @@ export const MinimalHero = ({
           <div className="space-y-4">
             <H1 className="font-serif">{title}</H1>
             {subtitle && (
-              <LeadText className="text-primary-600">
-                {subtitle}
-              </LeadText>
+              <LeadText className="text-primary-600">{subtitle}</LeadText>
             )}
           </div>
         </div>

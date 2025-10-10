@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "@remix-run/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Menu, X } from "react-feather";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -48,64 +48,66 @@ export const Navigation = () => {
 
   return (
     <>
-      <header className={`minimal-header ${isScrolled ? 'scrolled' : ''} ${isCollapsed ? 'collapsed' : ''}`}>
+      <header
+        className={`minimal-header ${isScrolled ? "scrolled" : ""} ${
+          isCollapsed ? "collapsed" : ""
+        }`}
+      >
         <div className="container">
           <Link to="/" className="minimal-logo">
-            <img 
-              src="/assets/img/recraft_icon.svg" 
-              alt="reCraft Icon" 
-              style={{ height: '32px', width: 'auto' }}
+            <img
+              src="/assets/img/recraft_icon.svg"
+              alt="reCraft Icon"
+              style={{ height: "32px", width: "auto" }}
             />
-            <img 
-              src="/assets/img/recraft_text.svg" 
-              alt="reCraft Text" 
-              style={{ height: '34px', width: 'auto', marginLeft: '8px' }}
+            <img
+              src="/assets/img/recraft_text.svg"
+              alt="reCraft Text"
+              style={{ height: "34px", width: "auto", marginLeft: "8px" }}
             />
           </Link>
 
-          <nav className={`minimal-nav ${isCollapsed ? 'collapsed' : ''}`}>
-            <Link 
-              to="/" 
-              className={isActivePath("/") ? "active" : ""}
-            >
+          <nav className={`minimal-nav ${isCollapsed ? "collapsed" : ""}`}>
+            <Link to="/" className={isActivePath("/") ? "active" : ""}>
               Home
             </Link>
-            <Link 
-              to="/blog" 
-              className={isActivePath("/blog") ? "active" : ""}
-            >
+            <Link to="/blog" className={isActivePath("/blog") ? "active" : ""}>
               Blog
             </Link>
-            <Link 
-              to="/about" 
+            <Link
+              to="/about"
               className={isActivePath("/about") ? "active" : ""}
             >
               About
             </Link>
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className={isActivePath("/contact") ? "active" : ""}
             >
               Contact
             </Link>
           </nav>
 
-          <button 
-            className={`minimal-menu-toggle ${isMobileMenuOpen ? 'active' : ''} ${isCollapsed ? 'show' : ''}`}
+          <button
+            className={`minimal-menu-toggle ${
+              isMobileMenuOpen ? "active" : ""
+            } ${isCollapsed ? "show" : ""}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
           >
-            <span className="menu-icon">
-              <span className="menu-icon-line"></span>
-              <span className="menu-icon-line"></span>
-            </span>
+            {isMobileMenuOpen ? (
+              <X size={24} strokeWidth={1.6} aria-hidden="true" />
+            ) : (
+              <Menu size={24} strokeWidth={1.6} aria-hidden="true" />
+            )}
           </button>
         </div>
       </header>
 
       {/* Mobile Menu */}
-      <div 
-        className={`minimal-mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}
+      <div
+        className={`minimal-mobile-menu ${isMobileMenuOpen ? "active" : ""}`}
         onClick={(e) => {
           if (e.target === e.currentTarget) {
             setIsMobileMenuOpen(false);
@@ -114,10 +116,18 @@ export const Navigation = () => {
       >
         {/* Navigation links */}
         <nav className="minimal-mobile-menu-nav">
-          <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-          <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
-          <Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>About</Link>
-          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+          <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
+            Home
+          </Link>
+          <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)}>
+            Blog
+          </Link>
+          <Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>
+            About
+          </Link>
+          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+            Contact
+          </Link>
         </nav>
       </div>
     </>
