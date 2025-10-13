@@ -6,6 +6,7 @@ import {
 import { useLoaderData, Link } from "@remix-run/react";
 import { getPosts, getAssetUrl, type Post } from "../lib/directus";
 import { Calendar, Clock, ArrowRight } from "react-feather";
+import { formatDate } from "../utils/format";
 
 export const meta: MetaFunction = () => {
   return [
@@ -36,15 +37,6 @@ export default function BlogIndex() {
   const { posts, success, error } = useLoaderData<typeof loader>();
 
   // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <div
       className="minimal-content"
@@ -241,3 +233,4 @@ export default function BlogIndex() {
     </div>
   );
 }
+

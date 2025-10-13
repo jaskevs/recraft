@@ -3,6 +3,7 @@ import { useLoaderData, Link } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { getAssetUrl, getPosts, type Post } from "../lib/directus";
 import { Calendar, Clock, ArrowRight } from "react-feather";
+import { formatDate } from "../utils/format";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,15 +35,6 @@ export default function Index() {
   const { posts, success, error } = data;
 
   // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   return (
     <>
       {/* Hero Section */}
@@ -227,3 +219,5 @@ export default function Index() {
     </>
   );
 }
+
+

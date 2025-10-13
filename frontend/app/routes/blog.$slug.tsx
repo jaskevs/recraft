@@ -3,6 +3,7 @@ import { useLoaderData, Link } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { getPost, getAssetUrl, type Post } from "../lib/directus";
 import { Calendar, Clock, User, ArrowLeft } from "react-feather";
+import { formatDate, getReadingMinutesFromHtml } from "../utils/format";
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.post) {
@@ -16,7 +17,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   }
 
   return [
-    { title: `${data.post.title} — reCraft` },
+    { title: `${data.post.title} - reCraft` },
     {
       name: "description",
       content: data.post.excerpt || `Read ${data.post.title} on reCraft`,
@@ -48,24 +49,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function BlogPost() {
   const { post } = useLoaderData<typeof loader>();
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Estimate reading time (rough calculation)
-  const estimateReadingTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const wordCount = content.replace(/<[^>]*>/g, "").split(/\s+/).length;
-    const minutes = Math.ceil(wordCount / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
+  const readingMinutes = getReadingMinutesFromHtml(post.content);
   return (
     <article className="minimal-article">
       <header className="minimal-article-header">
@@ -81,16 +65,18 @@ export default function BlogPost() {
             <Calendar size={16} strokeWidth={1.6} aria-hidden="true" />
             {formatDate(post.date_created)}
           </span>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <Clock size={16} strokeWidth={1.6} aria-hidden="true" />
-            {estimateReadingTime(post.content)}
-          </span>
+          {readingMinutes ? (
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+              }}
+            >
+              <Clock size={16} strokeWidth={1.6} aria-hidden="true" />
+              {`${readingMinutes} min read`}
+            </span>
+          ) : null}
           <span
             style={{
               display: "inline-flex",
@@ -257,4 +243,16 @@ export default function BlogPost() {
     </article>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

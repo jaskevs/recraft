@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import { H3, BodyText, Caption, Excerpt, ReadingTime } from "../ui/Typography";
 import { ArrowRight, Clock, Calendar } from "react-feather";
+import { formatDate } from "../../utils/format";
 
 interface Post {
   id: string;
@@ -33,15 +34,6 @@ export const PostCard = ({
   showExcerpt = true,
   className = "",
 }: PostCardProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
   const getWordCount = (content: string) => {
     return content.trim().split(/\s+/).length;
   };
@@ -262,3 +254,4 @@ export const PostCard = ({
     </article>
   );
 };
+
