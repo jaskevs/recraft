@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker compose:*)",
+      "Bash(npm run schema:snapshot:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

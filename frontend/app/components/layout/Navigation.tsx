@@ -108,6 +108,11 @@ export const Navigation = () => {
       {/* Mobile Menu */}
       <div
         className={`minimal-mobile-menu ${isMobileMenuOpen ? "active" : ""}`}
+        style={{
+          visibility: isMobileMenuOpen ? "visible" : "hidden",
+          opacity: isMobileMenuOpen ? 1 : 0,
+          pointerEvents: isMobileMenuOpen ? "all" : "none",
+        }}
         onClick={(e) => {
           if (e.target === e.currentTarget) {
             setIsMobileMenuOpen(false);
@@ -133,4 +138,5 @@ export const Navigation = () => {
     </>
   );
 };
+
 

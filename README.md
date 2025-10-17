@@ -36,7 +36,10 @@ Useful extras:
 - Environment defaults live in `backend/.env.example`; copy to `.env` for local overrides
 - `backend/docker-compose.yml` runs PostgreSQL and Directus with health checks and persistent volumes
 - Directus automatically applies the committed schema snapshot on startup via `entrypoint.sh`
-- Additional detail: `docs/context/backend-directus.md`
+- **Schema Management**: All field/collection changes are version-controlled in `backend/snapshots/schema.yaml`
+  - After making changes in Directus admin UI, run `npm run schema:snapshot` to capture them
+  - The snapshot uses PostgreSQL vendor format and will auto-apply on fresh deployments
+- Additional detail: `docs/context/backend-directus.md` and `backend/MIGRATION.md`
 
 ## Frontend Notes
 - Configure the Directus URL through `DIRECTUS_URL` (defaults to `http://localhost:8055`)
