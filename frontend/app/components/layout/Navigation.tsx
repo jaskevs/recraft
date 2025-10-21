@@ -1,6 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "@remix-run/react";
 import { Menu, X } from "react-feather";
+
+const NAV_ITEMS = [
+  { label: "Home", href: "/" },
+  { label: "Blog", href: "/blog" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+] as const;
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -8,7 +15,6 @@ export const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // Enhanced scroll effect with collapse detection
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -16,7 +22,8 @@ export const Navigation = () => {
       setIsCollapsed(currentScrollY > 50);
     };
 
-    // Throttle scroll events for better performance
+    handleScroll();
+
     let ticking = false;
     const throttledHandleScroll = () => {
       if (!ticking) {
@@ -34,15 +41,29 @@ export const Navigation = () => {
     };
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isMobileMenuOpen]);
 
   const isActivePath = (href: string) => {
     if (href === "/") {
       return location.pathname === "/";
     }
+
     return location.pathname.startsWith(href);
   };
 
@@ -68,33 +89,30 @@ export const Navigation = () => {
           </Link>
 
           <nav className={`minimal-nav ${isCollapsed ? "collapsed" : ""}`}>
-            <Link to="/" className={isActivePath("/") ? "active" : ""}>
-              Home
-            </Link>
-            <Link to="/blog" className={isActivePath("/blog") ? "active" : ""}>
-              Blog
-            </Link>
-            <Link
-              to="/about"
-              className={isActivePath("/about") ? "active" : ""}
-            >
-              About
-            </Link>
-            <Link
-              to="/contact"
-              className={isActivePath("/contact") ? "active" : ""}
-            >
-              Contact
-            </Link>
+            {NAV_ITEMS.map((item) => {
+              const isActive = isActivePath(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  to={item.href}
+                  className={isActive ? "active" : ""}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <button
             className={`minimal-menu-toggle ${
               isMobileMenuOpen ? "active" : ""
             } ${isCollapsed ? "show" : ""}`}
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMobileMenuOpen}
+            aria-controls="minimal-mobile-navigation"
+            type="button"
           >
             {isMobileMenuOpen ? (
               <X size={24} strokeWidth={1.6} aria-hidden="true" />
@@ -105,38 +123,36 @@ export const Navigation = () => {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       <div
+        id="minimal-mobile-navigation"
         className={`minimal-mobile-menu ${isMobileMenuOpen ? "active" : ""}`}
-        style={{
-          visibility: isMobileMenuOpen ? "visible" : "hidden",
-          opacity: isMobileMenuOpen ? 1 : 0,
-          pointerEvents: isMobileMenuOpen ? "all" : "none",
-        }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
+        aria-hidden={!isMobileMenuOpen}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) {
             setIsMobileMenuOpen(false);
           }
         }}
       >
-        {/* Navigation links */}
-        <nav className="minimal-mobile-menu-nav">
-          <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
-            Home
-          </Link>
-          <Link to="/blog" onClick={() => setIsMobileMenuOpen(false)}>
-            Blog
-          </Link>
-          <Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>
-            About
-          </Link>
-          <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-            Contact
-          </Link>
+        <nav className="minimal-mobile-menu-nav" aria-label="Mobile navigation">
+          {NAV_ITEMS.map((item, index) => {
+            const isActive = isActivePath(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                data-number={String(index + 1).padStart(2, "0")}
+                className={isActive ? "active" : undefined}
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-current={isActive ? "page" : undefined}
+                tabIndex={isMobileMenuOpen ? 0 : -1}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </>
   );
 };
-
-

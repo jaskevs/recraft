@@ -747,7 +747,7 @@ a:hover {
   background: var(--color-dark-gray);
 }
 
-/* Full-screen mobile menu overlay - Fantasy.co inspired */
+/* Full-screen mobile menu overlay */
 .minimal-mobile-menu {
   position: fixed;
   top: 0;
@@ -760,121 +760,128 @@ a:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transform: translateY(-100%);
+  font-family: var(--font-sans);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  transform: translateY(-12px);
   transition:
-    transform 0.6s cubic-bezier(0.77, 0, 0.175, 1),
-    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-  overflow: hidden;
-}
-
-.minimal-mobile-menu::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, 
-    rgba(255, 255, 255, 0) 0%,
-    rgba(0, 0, 0, 0.02) 100%);
-  pointer-events: none;
+    opacity 0.24s ease,
+    transform 0.28s cubic-bezier(0.33, 1, 0.68, 1),
+    visibility 0s linear 0.24s;
+  will-change: opacity, transform;
+  padding: 0 var(--space-lg);
 }
 
 .minimal-mobile-menu.active {
-  transform: translateY(0);
   opacity: 1;
   visibility: visible;
   pointer-events: all;
+  transform: translateY(0);
+  transition:
+    opacity 0.24s ease,
+    transform 0.32s cubic-bezier(0.33, 1, 0.68, 1),
+    visibility 0s linear 0s;
 }
 
 .minimal-mobile-menu-nav {
+  width: min(480px, 90vw);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: clamp(1.5rem, 4vh, 2.5rem);
-  position: relative;
-  z-index: 1;
+  align-items: flex-start;
+  gap: clamp(1rem, 2.4vw, 1.6rem);
 }
 
 .minimal-mobile-menu a {
-  display: block;
-  font-size: clamp(2.5rem, 7vw, 4rem);
-  font-weight: 300;
-  color: var(--color-black);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: clamp(1rem, 2.8vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.64);
   text-decoration: none;
-  text-align: center;
-  letter-spacing: -0.04em;
-  opacity: 0;
-  transform: translateY(60px) rotateX(-20deg);
-  transform-origin: center bottom;
-  transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
   position: relative;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    transform 0.32s cubic-bezier(0.33, 1, 0.68, 1),
+    opacity 0.24s ease,
+    color 0.24s ease;
+  will-change: transform, opacity;
 }
 
-/* Subtle underline on hover */
 .minimal-mobile-menu a::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 10%;
-  width: 80%;
+  left: 0;
+  bottom: -0.45rem;
+  width: 100%;
   height: 1px;
-  background: var(--color-black);
+  background: currentColor;
   transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
-.minimal-mobile-menu a:hover::after {
+.minimal-mobile-menu a::before {
+  content: attr(data-number);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: rgba(15, 23, 42, 0.4);
+  position: absolute;
+  left: -2.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.24s ease;
+}
+
+.minimal-mobile-menu.active a {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.minimal-mobile-menu.active a:nth-child(1) { transition-delay: 0.04s; }
+.minimal-mobile-menu.active a:nth-child(2) { transition-delay: 0.08s; }
+.minimal-mobile-menu.active a:nth-child(3) { transition-delay: 0.12s; }
+.minimal-mobile-menu.active a:nth-child(4) { transition-delay: 0.16s; }
+
+.minimal-mobile-menu a:hover,
+.minimal-mobile-menu a:focus-visible {
+  color: var(--color-black);
+  transform: translateY(-2px);
+}
+
+.minimal-mobile-menu a:hover::after,
+.minimal-mobile-menu a:focus-visible::after {
   transform: scaleX(1);
 }
 
-/* Staggered animation when menu opens */
-.minimal-mobile-menu.active a {
-  opacity: 1;
-  transform: translateY(0) rotateX(0);
-}
-
-.minimal-mobile-menu.active a:nth-child(1) { 
-  transition-delay: 0.1s;
-}
-.minimal-mobile-menu.active a:nth-child(2) { 
+.minimal-mobile-menu.active a::before {
+  opacity: 0.6;
   transition-delay: 0.2s;
 }
-.minimal-mobile-menu.active a:nth-child(3) { 
-  transition-delay: 0.3s;
-}
-.minimal-mobile-menu.active a:nth-child(4) { 
-  transition-delay: 0.4s;
+
+.minimal-mobile-menu a:hover::before,
+.minimal-mobile-menu a:focus-visible::before {
+  opacity: 0.6;
 }
 
-/* Hover state */
-.minimal-mobile-menu a:hover {
-  color: var(--color-charcoal);
-  transform: scale(1.05);
-}
+@media (max-width: 640px) {
+  .minimal-mobile-menu {
+    padding: 0 var(--space-md);
+  }
 
-/* Add number indicators Fantasy.co style */
-.minimal-mobile-menu a::before {
-  content: attr(data-number);
-  position: absolute;
-  left: -2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.875rem;
-  font-weight: 400;
-  color: var(--color-medium-gray);
-  opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
+  .minimal-mobile-menu-nav {
+    width: 100%;
+  }
 
-.minimal-mobile-menu.active a::before {
-  opacity: 0.5;
+  .minimal-mobile-menu a::before {
+    left: -1.75rem;
+  }
 }
 
 /* Animations */
@@ -1039,6 +1046,7 @@ a:hover {
   transform: translateY(0);
   transition: all 0.3s ease;
 }
+
 
 
 
