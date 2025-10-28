@@ -1,6 +1,5 @@
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -64,7 +63,6 @@ export default function App() {
         <Footer />
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );
@@ -89,3 +87,5 @@ function Footer() {
     </footer>
   );
 }
+
+

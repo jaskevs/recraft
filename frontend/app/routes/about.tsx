@@ -1,6 +1,12 @@
 import type { MetaFunction } from "@remix-run/node";
+import type { CSSProperties } from "react";
 import { Link } from "@remix-run/react";
 import { Check, Code, Cloud, Cpu } from "react-feather";
+
+interface GridStyle extends CSSProperties {
+  "--grid-min-size"?: string;
+  "--grid-gap"?: string;
+}
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,6 +20,16 @@ export const meta: MetaFunction = () => {
 };
 
 export default function About() {
+  const missionGridStyles: GridStyle = {
+    marginTop: "var(--space-3xl)",
+    "--grid-min-size": "360px",
+  };
+
+  const techGridStyles: GridStyle = {
+    marginTop: "var(--space-3xl)",
+    "--grid-min-size": "260px",
+  };
+
   return (
     <div
       className="minimal-content"
@@ -55,12 +71,7 @@ export default function About() {
         </div>
 
         {/* Main Content */}
-        <div
-          className="minimal-blog-grid"
-          style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-          }}
-        >
+        <div className="minimal-grid" style={missionGridStyles}>
           <div
             style={{
               background: "var(--color-pure-white)",
@@ -287,12 +298,7 @@ export default function About() {
             as a practical example of modern web development practices.
           </p>
 
-          <div
-            className="minimal-blog-grid"
-            style={{
-              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            }}
-          >
+          <div className="minimal-grid" style={techGridStyles}>
             <div style={{ textAlign: "center" }}>
               <div
                 style={{

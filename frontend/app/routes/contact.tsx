@@ -1,5 +1,11 @@
 import type { MetaFunction } from "@remix-run/node";
+import type { CSSProperties } from "react";
 import { Mail, Clock, Send } from "react-feather";
+
+interface GridStyle extends CSSProperties {
+  "--grid-min-size"?: string;
+  "--grid-gap"?: string;
+}
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,6 +15,18 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Contact() {
+  const formGridStyles: GridStyle = {
+    "--grid-min-size": "260px",
+    "--grid-gap": "var(--space-xl)",
+  };
+
+  const contactGridStyles: GridStyle = {
+    marginTop: "var(--space-3xl)",
+    marginBottom: "var(--space-4xl)",
+    "--grid-min-size": "260px",
+    "--grid-gap": "var(--space-xl)",
+  };
+
   return (
     <div
       className="minimal-content"
@@ -73,13 +91,7 @@ export default function Contact() {
                 gap: "var(--space-xl)",
               }}
             >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                  gap: "var(--space-xl)",
-                }}
-              >
+              <div className="minimal-grid" style={formGridStyles}>
                 <div>
                   <label
                     htmlFor="name"
@@ -282,13 +294,7 @@ export default function Contact() {
         </div>
 
         {/* Contact Information */}
-        <div
-          className="minimal-blog-grid"
-          style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            marginBottom: "var(--space-4xl)",
-          }}
-        >
+        <div className="minimal-grid" style={contactGridStyles}>
           <div
             style={{
               background: "rgba(255, 255, 255, 0.6)",

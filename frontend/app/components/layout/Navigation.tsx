@@ -79,12 +79,12 @@ export const Navigation = () => {
             <img
               src="/assets/img/recraft_icon.svg"
               alt="reCraft Icon"
-              style={{ height: "32px", width: "auto" }}
+              style={{ height: "36px", width: "auto" }}
             />
             <img
               src="/assets/img/recraft_text.svg"
               alt="reCraft Text"
-              style={{ height: "34px", width: "auto", marginLeft: "8px" }}
+              style={{ height: "40px", width: "auto", marginLeft: "8px" }}
             />
           </Link>
 
