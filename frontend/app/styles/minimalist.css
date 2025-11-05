@@ -306,6 +306,19 @@ a:hover {
   gap: var(--space-xl);
   position: relative;
   margin-left: auto;
+  transition: opacity var(--transition-base), transform var(--transition-base);
+}
+
+.minimal-nav.collapsed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+}
+
+.minimal-nav:not(.collapsed) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .minimal-nav a {
@@ -314,40 +327,7 @@ a:hover {
   color: var(--color-dark-gray);
   position: relative;
   padding: 0.25rem 0;
-  opacity: 1;
-  transform: translateX(0);
-  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-/* Staggered collapse animation - subtle movement within panel */
-.minimal-nav.collapsed a:nth-child(4) {
-  transform: translateX(25px);
-  opacity: 0;
-  transition-delay: 0s;
-}
-
-.minimal-nav.collapsed a:nth-child(3) {
-  transform: translateX(20px);
-  opacity: 0;
-  transition-delay: 0.06s;
-}
-
-.minimal-nav.collapsed a:nth-child(2) {
-  transform: translateX(15px);
-  opacity: 0;
-  transition-delay: 0.12s;
-}
-
-.minimal-nav.collapsed a:nth-child(1) {
-  transform: translateX(10px);
-  opacity: 0;
-  transition-delay: 0.18s;
-}
-
-/* Faster return animation */
-.minimal-nav:not(.collapsed) a {
-  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
-  transition-delay: 0s;
+  transition: color 0.2s ease;
 }
 
 .minimal-nav a::after {
@@ -1101,6 +1081,10 @@ a:hover {
   transform: translateY(0);
   transition: all 0.3s ease;
 }
+
+
+
+
 
 
 
