@@ -1,0 +1,25 @@
+# Git & VCS
+.git
+.gitignore
+
+# Node & build junk
+node_modules
+npm-debug.log*
+.yarn-integrity
+.cache
+build
+coverage
+*.tgz
+
+# IDE/system
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Local env files (Dokploy will inject env)
+.env
+.env.*
+
+!snapshots/**
+!entrypoint.sh

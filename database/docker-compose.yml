@@ -1,0 +1,23 @@
+services:
+  payload-postgres:
+    image: postgres:16-alpine
+    container_name: payload-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-payload}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-payload_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-recraft_payload}
+      TZ: ${TZ:-Australia/Melbourne}
+    ports:
+      # Expose container 5432 to host port 5434 (configurable via env)
+      - "${POSTGRES_HOST_PORT:-5434}:5432"
+    volumes:
+      - payload_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-payload} -d ${POSTGRES_DB:-recraft_payload}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  payload_pg_data:
