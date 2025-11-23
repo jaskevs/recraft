@@ -1,0 +1,1111 @@
+/*--------------------------------------------------------------
+Fantasy-Inspired Modern Theme
+Clean, minimal design with white content areas
+--------------------------------------------------------------*/
+
+/* Import Legible Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Root Variables - Fantasy.co Inspired */
+:root {
+    /* Colors */
+    --primary-bg: #f8f8f8;
+    --content-bg: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #666666;
+    --text-light: #000000;
+    --accent: #000000;
+    --border-light: #e5e5e5;
+    --border-dark: #d0d0d0;
+    --overlay: rgba(255, 255, 255, 0.95);
+    
+    /* Typography */
+    --font-primary: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Poppins', sans-serif;
+    --font-title: 'Inter', 'TT Norms Web', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    
+    /* Spacing */
+    --container-width: 1300px;
+    --content-width: 1270px;
+    --gap-xs: 0.5rem;
+    --gap-sm: 1rem;
+    --gap-md: 2rem;
+    --gap-lg: 3rem;
+    --gap-xl: 5rem;
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --shadow-medium: 0 8px 40px rgba(0, 0, 0, 0.08);
+    --shadow-strong: 0 20px 60px rgba(0, 0, 0, 0.12);
+    
+    /* Transitions */
+    --transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-smooth: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-elastic: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+ul, ol {
+    list-style: none;
+    list-style-type: none;
+}
+
+li {
+    list-style: none;
+    list-style-type: none;
+}
+
+html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: 1.6rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    background-color: var(--primary-bg);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Page Transition Overlay */
+.page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-bg);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-transition-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.page-transition-overlay .transition-logo {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-light);
+    letter-spacing: -0.02em;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-title);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 var(--gap-md) 0;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: clamp(3.2rem, 8vw, 8rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+}
+
+h2 {
+    font-size: clamp(2.4rem, 5vw, 5rem);
+    font-weight: 700;
+}
+
+h3 {
+    font-size: clamp(2rem, 3vw, 3.2rem);
+    font-weight: 600;
+}
+
+h4 {
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 var(--gap-md) 0;
+    line-height: 1.7;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+a:hover {
+    opacity: 0.7;
+}
+
+/* Layout Components */
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--gap-md);
+}
+
+.content-container {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 0 var(--gap-md);
+}
+
+/* Header */
+.typology-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: transparent;
+    z-index: 1000;
+    border-bottom: none;
+    transition: all var(--transition-smooth);
+}
+
+.typology-header .container {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+}
+
+/* Logo */
+.typology-logo {
+    position: relative;
+    padding: 1rem 1.5rem;
+    transition: all var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+
+.typology-logo a {
+    display: inline-block;
+    position: relative;
+    transition: all var(--transition-smooth);
+    line-height: 0;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: relative;
+    height: 40px;
+}
+
+.logo-icon {
+    height: 40px;
+    width: auto;
+    position: relative;
+    z-index: 2;
+    display: block;
+}
+
+.logo-text {
+    height: 42px;
+    width: auto;
+    margin-left: 8px;
+    position: relative;
+    z-index: 1;
+    display: block;
+}
+
+
+.typology-logo a:hover .logo-icon,
+.typology-logo a:hover .logo-text {
+    opacity: 0.8;
+}
+
+
+
+/* Navigation */
+.slot-r {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(250, 250, 250, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+}
+
+.typology-menu {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.typology-menu ul {
+    display: flex;
+    list-style: none !important;
+    gap: var(--gap-sm);
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.typology-menu li {
+    list-style: none !important;
+    margin: 0;
+    padding: 0;
+}
+
+.typology-menu a {
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-family: var(--font-primary);
+    color: var(--text-primary);
+    padding: 0.75rem 1.25rem;
+    position: relative;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.typology-menu a:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.typology-menu li.current a {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--accent);
+    font-weight: 500;
+}
+
+/* Actions */
+.typology-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    margin-left: var(--gap-md);
+    padding-left: var(--gap-md);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    height: 40px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.typology-search-button {
+    color: var(--text-primary);
+    font-size: 1.6rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: transparent;
+    text-decoration: none;
+}
+
+.typology-search-button:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+/* Hero/Cover Section - Content-Focused Design */
+.typology-cover {
+    min-height: auto;
+    background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+    position: relative;
+    padding: 8rem 0 4rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.typology-cover-content {
+    text-align: center;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.typology-cover-title {
+    font-family: var(--font-title);
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: var(--gap-md);
+    color: var(--text-light);
+    letter-spacing: -0.02em;
+}
+
+.typology-cover-desc {
+    font-size: clamp(1.6rem, 2.5vw, 1.9rem);
+    font-weight: 400;
+    opacity: 0.85;
+    line-height: 1.6;
+    margin-bottom: var(--gap-lg);
+    color: var(--text-secondary);
+}
+
+/* Subtle divider line */
+.typology-cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+}
+
+/* Empty Cover for content pages */
+.typology-cover-empty {
+    min-height: auto;
+    padding: 4rem 0 2rem;
+    background: linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%);
+    border-bottom: 1px solid var(--border-light);
+}
+
+/* Main Content Area */
+.typology-fake-bg {
+    background: var(--primary-bg);
+    min-height: 100vh;
+    position: relative;
+    padding: var(--gap-xl) 0;
+}
+
+/* Content Sections - WHITE BACKGROUND */
+.typology-section {
+    background: var(--content-bg);
+    max-width: var(--content-width);
+    width: 100%;
+    margin: 0 auto var(--gap-xl);
+    padding: var(--gap-xl);
+    border-radius: 20px;
+    box-shadow: var(--shadow-medium);
+    position: relative;
+    color: var(--text-primary);
+    overflow: visible;
+}
+
+.typology-section:first-child {
+    margin-top: -2rem;
+}
+
+/* Section Headings */
+.typology-section-heading {
+    text-align: center;
+    margin-bottom: var(--gap-xl);
+}
+
+.typology-section-heading h1 {
+    color: var(--text-primary);
+    margin-bottom: var(--gap-md);
+}
+
+.typology-section-heading p {
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    font-weight: 300;
+}
+
+/* Posts Container */
+.typology-posts {
+    max-width: 100%;
+    position: relative;
+}
+
+/* Individual Post */
+.typology-post {
+    margin-bottom: var(--gap-xl);
+    padding-bottom: var(--gap-xl);
+    border-bottom: 1px solid var(--border-light);
+    position: relative;
+    overflow: visible;
+}
+
+.typology-post:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Post Header */
+.entry-header {
+    margin-bottom: var(--gap-lg);
+    position: relative;
+    overflow: visible;
+}
+
+.entry-title {
+    font-family: var(--font-title) !important;
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--gap-md);
+    line-height: 1.1;
+    position: relative;
+    z-index: 15;
+    letter-spacing: -0.02em;
+}
+
+.entry-title a {
+    color: var(--text-primary);
+}
+
+.entry-title a:hover {
+    color: var(--accent);
+}
+
+/* Entry Meta */
+.entry-meta {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 15;
+}
+
+.entry-meta span {
+    margin-right: var(--gap-md);
+}
+
+/* Post Letter - Large Background Letter */
+.post-letter {
+    font-size: clamp(16rem, 25vw, 28rem);
+    font-weight: 600;
+    line-height: 1;
+    position: absolute;
+    right: -2rem;
+    top: -4rem;
+    color: rgba(0, 0, 0, 0.1);
+    font-family: var(--font-display);
+    z-index: 10;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.05em;
+}
+
+/* Single Post Watermark Letter - Prominent Right Side */
+.post-letter-single {
+    font-size: clamp(20rem, 35vw, 45rem);
+    font-weight: 700;
+    line-height: 1;
+    position: absolute;
+    right: -5rem;
+    bottom: 10rem;
+    color: rgba(0, 0, 0, 0.04);
+    font-family: var(--font-display);
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.08em;
+    transform: rotate(-5deg);
+    opacity: 0.7;
+}
+
+/* Single Post Container needs relative positioning */
+.typology-single-content {
+    position: relative;
+}
+
+/* Entry Content */
+.entry-content {
+    font-size: 1.7rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    position: relative;
+    z-index: 15;
+}
+
+.entry-content p {
+    margin-bottom: var(--gap-md);
+}
+
+.entry-content h2,
+.entry-content h3 {
+    margin-top: var(--gap-xl);
+    color: var(--text-primary);
+}
+
+/* Entry Footer */
+.entry-footer {
+    position: relative;
+    z-index: 15;
+    margin-top: var(--gap-lg);
+}
+
+/* Buttons */
+.typology-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 1.4rem 3rem;
+    background: var(--text-primary);
+    color: var(--text-light);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+    border: 2px solid var(--text-primary);
+    border-radius: 50px;
+    transition: all var(--transition-smooth);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.typology-button:hover {
+    background: transparent;
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* Contact Page Styles */
+.contact-intro {
+    text-align: center;
+    margin-bottom: var(--gap-xl);
+}
+
+.contact-intro .lead {
+    font-size: 2rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--gap-lg);
+    margin: var(--gap-xl) 0;
+}
+
+.contact-item {
+    text-align: center;
+    padding: var(--gap-lg);
+    border-radius: 16px;
+    background: #f8f9fa;
+    transition: all var(--transition-smooth);
+}
+
+.contact-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
+}
+
+.contact-icon {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: var(--gap-md);
+}
+
+/* Forms */
+.typology-contact-form .form-group {
+    margin-bottom: var(--gap-lg);
+}
+
+.typology-contact-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--gap-sm);
+    color: var(--text-primary);
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+}
+
+.typology-contact-form input,
+.typology-contact-form textarea {
+    width: 100%;
+    padding: 1.6rem;
+    border: 2px solid var(--border-light);
+    border-radius: 12px;
+    font-family: var(--font-primary);
+    font-size: 1.6rem;
+    transition: all var(--transition-fast);
+    background: #ffffff;
+}
+
+.typology-contact-form input:focus,
+.typology-contact-form textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Search Page */
+.search-form-container {
+    max-width: 600px;
+    margin: 0 auto var(--gap-xl);
+}
+
+.typology-search-form.large {
+    display: flex;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+}
+
+.typology-search-form.large input {
+    flex: 1;
+    padding: 1.8rem 2.4rem;
+    border: none;
+    font-size: 1.6rem;
+    background: #ffffff;
+}
+
+.typology-search-form.large button {
+    padding: 1.8rem 3rem;
+    background: var(--accent);
+    color: var(--text-light);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+/* Footer */
+.typology-footer {
+    background: #ffffff;
+    color: var(--text-primary);
+    padding: var(--gap-xl) 0 var(--gap-lg);
+    border-top: 1px solid var(--border-light);
+}
+
+.typology-footer .widget h4 {
+    color: var(--text-light);
+    font-size: 1.4rem;
+    margin-bottom: var(--gap-md);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.typology-footer .widget {
+    color: var(--text-secondary);
+}
+
+.typology-footer .widget a {
+    color: var(--text-secondary);
+}
+
+.typology-footer .widget a:hover {
+    color: var(--text-light);
+}
+
+/* Mobile Navigation */
+.typology-action-sidebar {
+    display: none;
+}
+
+.typology-action-sidebar span {
+    color: var(--text-primary);
+    font-size: 1.6rem;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: transparent;
+}
+
+.typology-action-sidebar span:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+
+/* Collapsed Menu States */
+.header-collapsed .typology-menu {
+    opacity: 0;
+    transform: translateX(-20px);
+    width: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.header-collapsed .typology-actions {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+}
+
+.header-collapsed .slot-r {
+    padding: 0.75rem 1rem;
+}
+
+/* Show mobile menu button in collapsed state */
+.header-collapsed .typology-action-sidebar {
+    display: flex !important;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Desktop only - hide collapsed menu on mobile */
+@media (max-width: 1024px) {
+    .header-collapsed .typology-menu {
+        opacity: 1;
+        transform: translateX(0);
+        width: auto;
+        pointer-events: auto;
+    }
+    
+    .header-collapsed .typology-actions {
+        margin-left: var(--gap-md);
+        padding-left: var(--gap-md);
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-collapsed .slot-r {
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+.typology-action-sidebar span:active {
+    transform: translateY(0);
+}
+
+.typology-sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-smooth);
+}
+
+.typology-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.typology-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9999;
+    transform: translateY(-100%);
+    transition: transform var(--transition-smooth);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.typology-sidebar.active {
+    transform: translateY(0);
+}
+
+.typology-sidebar-header {
+    padding: var(--gap-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.typology-sidebar-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.typology-sidebar-logo .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.typology-sidebar-logo .logo-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.typology-sidebar-logo .logo-text {
+    width: 120px;
+    height: auto;
+}
+
+.typology-sidebar-close {
+    background: none;
+    border: none;
+    font-size: 2.4rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    transition: transform var(--transition-fast);
+    position: absolute;
+    top: var(--gap-lg);
+    right: var(--gap-lg);
+    z-index: 10001;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.typology-sidebar-close:hover {
+    transform: rotate(90deg) scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    :root {
+        --gap-xl: 4rem;
+        --gap-lg: 2.5rem;
+    }
+    
+    .typology-section {
+        padding: var(--gap-lg);
+        margin-bottom: var(--gap-lg);
+    }
+    
+    .typology-action-sidebar {
+        display: block;
+    }
+    
+    .typology-menu {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --gap-xl: 3rem;
+        --gap-lg: 2rem;
+    }
+    
+    .typology-header .container {
+        height: 70px;
+        padding: 0 var(--gap-md);
+    }
+    
+    .logo-container {
+        height: 32px;
+    }
+    
+    .logo-icon {
+        height: 32px;
+    }
+    
+    .logo-text {
+        height: 24px;
+    }
+    
+    .typology-cover {
+        padding: 6rem 0 3rem;
+    }
+    
+    .typology-cover-empty {
+        padding: 3rem 0 1.5rem;
+    }
+    
+    .typology-section {
+        margin: 0 var(--gap-sm) var(--gap-lg);
+        padding: var(--gap-md);
+        border-radius: 16px;
+    }
+    
+    .typology-sidebar {
+        width: 100vw;
+        left: 0;
+        right: 0;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: var(--gap-md);
+    }
+    
+    .post-letter {
+        font-size: clamp(12rem, 20vw, 18rem);
+        right: -1rem;
+        top: -2rem;
+        opacity: 0.8;
+    }
+    
+    .post-letter-single {
+        font-size: clamp(15rem, 25vw, 30rem);
+        right: -3rem;
+        bottom: 5rem;
+        transform: rotate(-3deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .container,
+    .content-container {
+        padding: 0 var(--gap-sm);
+    }
+    
+    .typology-section {
+        margin: 0 var(--gap-xs) var(--gap-md);
+        padding: var(--gap-md) var(--gap-sm);
+        border-radius: 12px;
+    }
+    
+    .typology-cover {
+        padding: 5rem 0 2.5rem;
+    }
+    
+    .typology-cover-empty {
+        padding: 2.5rem 0 1rem;
+    }
+    
+    .typology-search-form.large {
+        flex-direction: column;
+        border-radius: 16px;
+    }
+    
+    .typology-search-form.large button {
+        border-radius: 0 0 16px 16px;
+    }
+    
+    .post-letter {
+        font-size: clamp(8rem, 15vw, 12rem);
+        right: -0.5rem;
+        top: -1rem;
+        opacity: 0.6;
+    }
+    
+    .post-letter-single {
+        font-size: clamp(10rem, 20vw, 18rem);
+        right: -2rem;
+        bottom: 2rem;
+        transform: rotate(-2deg);
+        opacity: 0.5;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.typology-section {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Scroll Animations */
+@media (prefers-reduced-motion: no-preference) {
+    .typology-post {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+    
+    .typology-post:nth-child(1) { animation-delay: 0.1s; }
+    .typology-post:nth-child(2) { animation-delay: 0.2s; }
+    .typology-post:nth-child(3) { animation-delay: 0.3s; }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: light) {
+    /* Keep current light theme as default */
+}
+
+/* Loading state */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}/* Mobile Menu Content Styling */
+.typology-sidebar-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--gap-lg);
+}
+
+.typology-responsive-menu {
+    text-align: center;
+}
+
+.typology-sidebar .typology-nav {
+    list-style: none !important;
+    padding: 0;
+    margin: 0;
+}
+
+.typology-sidebar .typology-nav li {
+    list-style: none !important;
+    margin: 0 0 2rem 0;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.typology-sidebar.active .typology-nav li {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.typology-sidebar .typology-nav a {
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-family: var(--font-title);
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.typology-sidebar .typology-nav a:hover {
+    color: var(--accent);
+    transform: translateX(10px);
+}
