@@ -1,311 +1,1126 @@
-# Payload Website Template
+# Payload CMS Website Template
 
-This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/main/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
+A production-ready content management system built with Payload CMS 3 and Next.js 15. This template provides a complete website solution with a powerful admin panel, flexible layout builder, and beautifully designed frontend.
 
-This template is right for you if you are working on:
+## Table of Contents
 
-- A personal or enterprise-grade website, blog, or portfolio
-- A content publishing platform with a fully featured publication workflow
-- Exploring the capabilities of Payload
-
-Core features:
-
-- [Pre-configured Payload Config](#how-it-works)
-- [Authentication](#users-authentication)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Development Commands](#development-commands)
+- [Environment Configuration](#environment-configuration)
+- [Project Architecture](#project-architecture)
+- [Directory Structure](#directory-structure)
+- [Theme Configuration](#theme-configuration)
+- [Collections & Content Model](#collections--content-model)
+- [Layout Builder System](#layout-builder-system)
 - [Access Control](#access-control)
-- [Layout Builder](#layout-builder)
-- [Draft Preview](#draft-preview)
-- [Live Preview](#live-preview)
-- [On-demand Revalidation](#on-demand-revalidation)
-- [SEO](#seo)
-- [Search](#search)
-- [Redirects](#redirects)
-- [Jobs and Scheduled Publishing](#jobs-and-scheduled-publish)
-- [Website](#website)
+- [Hooks & Revalidation](#hooks--revalidation)
+- [Testing](#testing)
+- [Database & Migrations](#database--migrations)
+- [Production Deployment](#production-deployment)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **CMS** | Payload CMS 3.64.0 |
+| **Framework** | Next.js 15.4.7 (App Router) |
+| **Runtime** | React 19.1.0 |
+| **Database** | PostgreSQL (via @payloadcms/db-postgres) |
+| **Styling** | TailwindCSS 3.4.3 + shadcn/ui |
+| **Rich Text** | Lexical Editor (@payloadcms/richtext-lexical) |
+| **Testing** | Vitest (integration) + Playwright (e2e) |
+| **Package Manager** | pnpm 9+ |
+| **Node** | 18.20.2+ or 20.9.0+ |
+
+---
 
 ## Quick Start
 
-To spin up this example locally, follow these steps:
-
-### Clone
-
-If you have not done so already, you need to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
-
-Use the `create-payload-app` CLI to clone this template directly to your machine:
+### 1. Clone and Install
 
 ```bash
-pnpx create-payload-app my-project -t website
+# Clone the repository
+cd recraft
+
+# Copy environment variables
+cp .env.example .env
+
+# Install dependencies
+pnpm install
 ```
 
-### Development
+### 2. Configure Environment
 
-1. First [clone the repo](#clone) if you have not done so already
-1. `cd my-project && cp .env.example .env` to copy the example environment variables
-1. `pnpm install && pnpm dev` to install dependencies and start the dev server
-1. open `http://localhost:3000` to open the app in your browser
+Edit `.env` with your configuration:
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+```env
+DATABASE_URI=postgres://payload:payload_pass@localhost:5434/recraft_payload
+PAYLOAD_SECRET=your-secret-here
+NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+CRON_SECRET=your-cron-secret
+PREVIEW_SECRET=your-preview-secret
+```
 
-## How it works
+### 3. Start Database (Docker)
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+```bash
+# Start PostgreSQL database
+docker compose -f database/docker-compose.yml --env-file database/.env up -d
+```
 
-### Collections
+### 4. Run Development Server
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+```bash
+# Start Next.js + Payload dev server
+pnpm dev
 
-- #### Users (Authentication)
+# Access the application
+# Frontend: http://localhost:3000
+# Admin: http://localhost:3000/admin
+```
 
-  Users are auth-enabled collections that have access to the admin panel and unpublished content. See [Access Control](#access-control) for more details.
+### 5. Seed Database (Optional)
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+Login to `/admin` and click "Seed Database" button, or visit:
+```
+http://localhost:3000/next/seed
+```
 
-- #### Posts
+**Demo User:**
+- Email: `demo-author@payloadcms.com`
+- Password: `password`
 
-  Posts are used to generate blog posts, news articles, or any other type of content that is published over time. All posts are layout builder enabled so you can generate unique layouts for each post using layout-building blocks, see [Layout Builder](#layout-builder) for more details. Posts are also draft-enabled so you can preview them before publishing them to your website, see [Draft Preview](#draft-preview) for more details.
+---
 
-- #### Pages
+## Development Commands
 
-  All pages are layout builder enabled so you can generate unique layouts for each page using layout-building blocks, see [Layout Builder](#layout-builder) for more details. Pages are also draft-enabled so you can preview them before publishing them to your website, see [Draft Preview](#draft-preview) for more details.
+### Common Commands
 
-- #### Media
+```bash
+# Development
+pnpm dev              # Start dev server (http://localhost:3000)
+pnpm build            # Build for production
+pnpm start            # Start production server (requires build first)
 
-  This is the uploads enabled collection used by pages, posts, and projects to contain media like images, videos, downloads, and other assets. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+# Code Quality
+pnpm lint             # Run ESLint
+pnpm lint:fix         # Auto-fix linting issues
 
-- #### Categories
+# Testing
+pnpm test             # Run all tests (integration + e2e)
+pnpm test:int         # Run integration tests (Vitest)
+pnpm test:e2e         # Run e2e tests (Playwright)
 
-  A taxonomy used to group posts together. Categories can be nested inside of one another, for example "News > Technology". See the official [Payload Nested Docs Plugin](https://payloadcms.com/docs/plugins/nested-docs) for more details.
+# Run single test
+pnpm exec vitest run path/to/test.int.spec.ts --config ./vitest.config.mts
+pnpm exec playwright test tests/e2e/spec-name.e2e.spec.ts --config=playwright.config.ts
+```
 
-### Globals
+### Payload CLI Commands
 
-See the [Globals](https://payloadcms.com/docs/configuration/globals) docs for details on how to extend this functionality.
+```bash
+# Type Generation
+pnpm generate:types   # Generate TypeScript types from Payload config
 
-- `Header`
+# Database Migrations
+pnpm payload migrate:create   # Create new migration (before deploying schema changes)
+pnpm payload migrate          # Run pending migrations
 
-  The data required by the header on your front-end like nav links.
+# Direct Payload CLI access
+pnpm payload [command]
+```
 
-- `Footer`
+### Database Commands
 
-  Same as above but for the footer of your site.
+```bash
+# Start database
+docker compose -f database/docker-compose.yml --env-file database/.env up -d
 
-## Access control
-
-Basic access control is setup to limit access to various content based based on publishing status.
-
-- `users`: Users can access the admin panel and create or edit content.
-- `posts`: Everyone can access published posts, but only users can create, update, or delete them.
-- `pages`: Everyone can access published pages, but only users can create, update, or delete them.
-
-For more details on how to extend this functionality, see the [Payload Access Control](https://payloadcms.com/docs/access-control/overview#access-control) docs.
-
-## Layout Builder
-
-Create unique page layouts for any type of content using a powerful layout builder. This template comes pre-configured with the following layout building blocks:
-
-- Hero
-- Content
-- Media
-- Call To Action
-- Archive
-
-Each block is fully designed and built into the front-end website that comes with this template. See [Website](#website) for more details.
-
-## Lexical editor
-
-A deep editorial experience that allows complete freedom to focus just on writing content without breaking out of the flow with support for Payload blocks, media, links and other features provided out of the box. See [Lexical](https://payloadcms.com/docs/rich-text/overview) docs.
-
-## Draft Preview
-
-All posts and pages are draft-enabled so you can preview them before publishing them to your website. To do this, these collections use [Versions](https://payloadcms.com/docs/configuration/collections#versions) with `drafts` set to `true`. This means that when you create a new post, project, or page, it will be saved as a draft and will not be visible on your website until you publish it. This also means that you can preview your draft before publishing it to your website. To do this, we automatically format a custom URL which redirects to your front-end to securely fetch the draft version of your content.
-
-Since the front-end of this template is statically generated, this also means that pages, posts, and projects will need to be regenerated as changes are made to published documents. To do this, we use an `afterChange` hook to regenerate the front-end when a document has changed and its `_status` is `published`.
-
-For more details on how to extend this functionality, see the official [Draft Preview Example](https://github.com/payloadcms/payload/tree/examples/draft-preview).
-
-## Live preview
-
-In addition to draft previews you can also enable live preview to view your end resulting page as you're editing content with full support for SSR rendering. See [Live preview docs](https://payloadcms.com/docs/live-preview/overview) for more details.
-
-## On-demand Revalidation
-
-We've added hooks to collections and globals so that all of your pages, posts, footer, or header changes will automatically be updated in the frontend via on-demand revalidation supported by Nextjs.
-
-> Note: if an image has been changed, for example it's been cropped, you will need to republish the page it's used on in order to be able to revalidate the Nextjs image cache.
-
-## SEO
-
-This template comes pre-configured with the official [Payload SEO Plugin](https://payloadcms.com/docs/plugins/seo) for complete SEO control from the admin panel. All SEO data is fully integrated into the front-end website that comes with this template. See [Website](#website) for more details.
-
-## Search
-
-This template also pre-configured with the official [Payload Search Plugin](https://payloadcms.com/docs/plugins/search) to showcase how SSR search features can easily be implemented into Next.js with Payload. See [Website](#website) for more details.
-
-## Redirects
-
-If you are migrating an existing site or moving content to a new URL, you can use the `redirects` collection to create a proper redirect from old URLs to new ones. This will ensure that proper request status codes are returned to search engines and that your users are not left with a broken link. This template comes pre-configured with the official [Payload Redirects Plugin](https://payloadcms.com/docs/plugins/redirects) for complete redirect control from the admin panel. All redirects are fully integrated into the front-end website that comes with this template. See [Website](#website) for more details.
-
-## Jobs and Scheduled Publish
-
-We have configured [Scheduled Publish](https://payloadcms.com/docs/versions/drafts#scheduled-publish) which uses the [jobs queue](https://payloadcms.com/docs/jobs-queue/jobs) in order to publish or unpublish your content on a scheduled time. The tasks are run on a cron schedule and can also be run as a separate instance if needed.
-
-> Note: When deployed on Vercel, depending on the plan tier, you may be limited to daily cron only.
-
-## Website
-
-This template includes a beautifully designed, production-ready front-end built with the [Next.js App Router](https://nextjs.org), served right alongside your Payload app in a instance. This makes it so that you can deploy both your backend and website where you need it.
-
-Core features:
-
-- [Next.js App Router](https://nextjs.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [React Hook Form](https://react-hook-form.com)
-- [Payload Admin Bar](https://github.com/payloadcms/payload/tree/main/packages/admin-bar)
-- [TailwindCSS styling](https://tailwindcss.com/)
-- [shadcn/ui components](https://ui.shadcn.com/)
-- User Accounts and Authentication
-- Fully featured blog
-- Publication workflow
-- Dark mode
-- Pre-made layout building blocks
-- SEO
-- Search
-- Redirects
-- Live preview
-
-### Cache
-
-Although Next.js includes a robust set of caching strategies out of the box, Payload Cloud proxies and caches all files through Cloudflare using the [Official Cloud Plugin](https://www.npmjs.com/package/@payloadcms/payload-cloud). This means that Next.js caching is not needed and is disabled by default. If you are hosting your app outside of Payload Cloud, you can easily reenable the Next.js caching mechanisms by removing the `no-store` directive from all fetch requests in `./src/app/_api` and then removing all instances of `export const dynamic = 'force-dynamic'` from pages files, such as `./src/app/(pages)/[slug]/page.tsx`. For more details, see the official [Next.js Caching Docs](https://nextjs.org/docs/app/building-your-application/caching).
-
-## Development
-
-To spin up this example locally, follow the [Quick Start](#quick-start). Then [Seed](#seed) the database with a few pages, posts, and projects.
-
-### Working with Postgres
-
-Postgres and other SQL-based databases follow a strict schema for managing your data. In comparison to our MongoDB adapter, this means that there's a few extra steps to working with Postgres.
-
-Note that often times when making big schema changes you can run the risk of losing data if you're not manually migrating it.
-
-#### Local development
-
-Ideally we recommend running a local copy of your database so that schema updates are as fast as possible. By default the Postgres adapter has `push: true` for development environments. This will let you add, modify and remove fields and collections without needing to run any data migrations.
-
-If your database is pointed to production you will want to set `push: false` otherwise you will risk losing data or having your migrations out of sync.
-
-#### Migrations
-
-[Migrations](https://payloadcms.com/docs/database/migrations) are essentially SQL code versions that keeps track of your schema. When deploy with Postgres you will need to make sure you create and then run your migrations.
-
-Locally create a migration
-
+# Stop database (preserves data)
+docker compose -f database/docker-compose.yml --env-file database/.env down
+
+# View logs
+docker compose -f database/docker-compose.yml --env-file database/.env logs -f
+```
+
+**Connection Strings:**
+- From host: `postgres://payload:payload_pass@localhost:5434/recraft_payload`
+- From container: `postgres://payload:payload_pass@payload-postgres:5432/recraft_payload`
+
+---
+
+## Environment Configuration
+
+### Required Environment Variables
+
+```bash
+# Database connection string (PostgreSQL)
+DATABASE_URI=postgres://user:password@host:port/database
+
+# Secret for encrypting JWT tokens (generate secure random string)
+PAYLOAD_SECRET=your-secret-here
+
+# Public URL for the application (no trailing slash)
+NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+
+# Secret for authenticating scheduled jobs/cron
+CRON_SECRET=your-cron-secret
+
+# Secret for validating draft preview requests
+PREVIEW_SECRET=your-preview-secret
+```
+
+### Optional Environment Variables
+
+```bash
+# Vercel deployment (auto-detected)
+VERCEL_PROJECT_PRODUCTION_URL=your-project.vercel.app
+
+# Node environment
+NODE_ENV=development # or production
+```
+
+---
+
+## Project Architecture
+
+### High-Level Overview
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Next.js Application                  │
+│  ┌───────────────────────┬──────────────────────────┐  │
+│  │   Frontend (Public)   │   Admin Panel (Payload)  │  │
+│  │                       │                          │  │
+│  │  - Pages (/[slug])    │  - Collections UI        │  │
+│  │  - Posts (/posts)     │  - Content Editor        │  │
+│  │  - Search             │  - Media Library         │  │
+│  │  - Sitemaps           │  - User Management       │  │
+│  └───────────────────────┴──────────────────────────┘  │
+│                           │                             │
+│                  ┌────────▼────────┐                    │
+│                  │  Payload CMS    │                    │
+│                  │  - Collections  │                    │
+│                  │  - Globals      │                    │
+│                  │  - Plugins      │                    │
+│                  └────────┬────────┘                    │
+│                           │                             │
+│                  ┌────────▼────────┐                    │
+│                  │   PostgreSQL    │                    │
+│                  │   (Docker)      │                    │
+│                  └─────────────────┘                    │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Route Structure
+
+```
+/                        → Homepage (Pages collection)
+/[slug]                  → Dynamic pages (Pages collection)
+/posts                   → Blog archive
+/posts/[slug]            → Individual post
+/posts/page/[number]     → Paginated posts
+/search                  → Search results
+/admin                   → Payload admin panel
+/api                     → REST API & GraphQL
+```
+
+---
+
+## Directory Structure
+
+<details>
+<summary><strong>Complete src/ Directory Tree (Click to expand)</strong></summary>
+
+```
+src/
+├── access/                          [Authorization & Access Control]
+│   ├── authenticated.ts             - Requires user login
+│   ├── anyone.ts                    - Public access
+│   └── authenticatedOrPublished.ts  - Logged in OR published content
+│
+├── app/                             [Next.js App Router]
+│   ├── (frontend)/                  [Public website routes]
+│   │   ├── layout.tsx               - Root layout (Header/Footer)
+│   │   ├── page.tsx                 - Homepage
+│   │   ├── not-found.tsx            - 404 page
+│   │   ├── globals.css              - TailwindCSS styles
+│   │   ├── typography.css           - Typography styles
+│   │   ├── minimalist.css           - Minimalist design system
+│   │   ├── (sitemaps)/
+│   │   │   ├── pages-sitemap.xml/route.ts
+│   │   │   └── posts-sitemap.xml/route.ts
+│   │   ├── [slug]/
+│   │   │   ├── page.tsx             - Dynamic pages (server)
+│   │   │   └── page.client.tsx      - Client interactivity
+│   │   ├── posts/
+│   │   │   ├── page.tsx             - Posts archive
+│   │   │   ├── page.client.tsx      - Archive client code
+│   │   │   ├── [slug]/
+│   │   │   │   ├── page.tsx         - Single post
+│   │   │   │   └── page.client.tsx  - Post client code
+│   │   │   └── page/[pageNumber]/
+│   │   │       ├── page.tsx         - Paginated posts
+│   │   │       └── page.client.tsx
+│   │   ├── search/
+│   │   │   ├── page.tsx
+│   │   │   └── page.client.tsx
+│   │   └── next/
+│   │       ├── preview/route.ts     - Enable preview mode
+│   │       ├── exit-preview/route.ts
+│   │       └── seed/route.ts        - Database seeding
+│   │
+│   └── (payload)/                   [Payload admin & API]
+│       ├── layout.tsx
+│       ├── admin/[[...segments]]/
+│       │   ├── page.tsx             - Admin UI
+│       │   └── not-found.tsx
+│       └── api/
+│           ├── [...slug]/route.ts   - REST API
+│           ├── graphql/route.ts     - GraphQL endpoint
+│           └── graphql-playground/route.ts
+│
+├── blocks/                          [Layout Builder Blocks]
+│   ├── RenderBlocks.tsx             - Block router
+│   ├── ArchiveBlock/                [Post archive display]
+│   │   ├── config.ts
+│   │   └── Component.tsx
+│   ├── Banner/                      [Alert banners]
+│   │   ├── config.ts
+│   │   └── Component.tsx
+│   ├── CallToAction/                [CTA sections]
+│   │   ├── config.ts
+│   │   └── Component.tsx
+│   ├── Code/                        [Syntax highlighted code]
+│   │   ├── config.ts
+│   │   ├── Component.tsx
+│   │   ├── Component.client.tsx
+│   │   └── CopyButton.tsx
+│   ├── Content/                     [Rich text content]
+│   │   ├── config.ts
+│   │   └── Component.tsx
+│   ├── Form/                        [Dynamic forms]
+│   │   ├── config.ts
+│   │   ├── Component.tsx
+│   │   ├── fields.tsx
+│   │   ├── Checkbox/index.tsx
+│   │   ├── Country/
+│   │   │   ├── index.tsx
+│   │   │   └── options.ts
+│   │   ├── Email/index.tsx
+│   │   ├── Error/index.tsx
+│   │   ├── Message/index.tsx
+│   │   ├── Number/index.tsx
+│   │   ├── Select/index.tsx
+│   │   ├── State/
+│   │   │   ├── index.tsx
+│   │   │   └── options.ts
+│   │   ├── Text/index.tsx
+│   │   ├── Textarea/index.tsx
+│   │   └── Width/index.tsx
+│   ├── MediaBlock/                  [Image/video blocks]
+│   │   ├── config.ts
+│   │   └── Component.tsx
+│   └── RelatedPosts/
+│       └── Component.tsx
+│
+├── collections/                     [Payload Collections]
+│   ├── Categories.ts                - Nested taxonomy
+│   ├── Media.ts                     - File uploads
+│   ├── Pages/
+│   │   ├── index.ts                 - Page collection config
+│   │   └── hooks/
+│   │       └── revalidatePage.ts    - ISR cache revalidation
+│   ├── Posts/
+│   │   ├── index.ts                 - Post collection config
+│   │   └── hooks/
+│   │       ├── populateAuthors.ts   - Auto-populate authors
+│   │       └── revalidatePost.ts    - ISR cache revalidation
+│   └── Users/
+│       └── index.ts                 - Authentication
+│
+├── components/                      [React Components]
+│   ├── AdminBar/                    - Edit bar for authenticated users
+│   ├── BeforeDashboard/             - Dashboard welcome widget
+│   │   └── SeedButton/              - Database seed button
+│   ├── BeforeLogin/                 - Login page message
+│   ├── Card/                        - Card wrapper
+│   ├── CollectionArchive/           - Archive listing
+│   ├── Link/                        - Enhanced Next.js Link
+│   ├── LivePreviewListener/         - Draft preview sync
+│   ├── Logo/                        - Site logo
+│   ├── Media/                       - Media components
+│   │   ├── index.tsx
+│   │   ├── types.ts
+│   │   ├── ImageMedia/index.tsx
+│   │   └── VideoMedia/index.tsx
+│   ├── PageRange/                   - Pagination info
+│   ├── Pagination/                  - Page controls
+│   ├── PayloadRedirects/            - Redirect handler
+│   ├── RichText/                    - Lexical renderer
+│   ├── theme/                       - Theme components
+│   │   ├── Navigation.tsx
+│   │   └── Typography.tsx
+│   └── ui/                          - shadcn/ui components
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── checkbox.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── pagination.tsx
+│       ├── select.tsx
+│       └── textarea.tsx
+│
+├── endpoints/                       [API Endpoints & Seed Data]
+│   └── seed/
+│       ├── index.ts                 - Seed orchestration
+│       ├── home.ts, contact-page.ts - Page seeds
+│       ├── contact-form.ts          - Form seed
+│       ├── post-1.ts, post-2.ts, post-3.ts
+│       └── image-1.ts, image-2.ts, image-3.ts, image-hero-1.ts
+│
+├── fields/                          [Reusable Field Configs]
+│   ├── defaultLexical.ts            - Default rich text config
+│   ├── link.ts                      - Link field (internal/external)
+│   └── linkGroup.ts                 - Multiple links
+│
+├── Footer/                          [Global Footer]
+│   ├── config.ts                    - Footer schema
+│   ├── Component.tsx                - Footer renderer
+│   ├── RowLabel.tsx                 - Admin UI label
+│   └── hooks/revalidateFooter.ts
+│
+├── Header/                          [Global Header]
+│   ├── config.ts                    - Header schema
+│   ├── Component.tsx                - Server component
+│   ├── Component.client.tsx         - Client features
+│   ├── Nav/index.tsx                - Navigation
+│   ├── RowLabel.tsx
+│   └── hooks/revalidateHeader.ts
+│
+├── heros/                           [Hero Templates]
+│   ├── RenderHero.tsx               - Hero router
+│   ├── config.ts                    - Hero field config
+│   ├── HighImpact/index.tsx         - Large hero + media
+│   ├── MediumImpact/index.tsx       - Medium hero + media
+│   ├── LowImpact/index.tsx          - Minimal hero
+│   └── PostHero/index.tsx           - Blog post hero
+│
+├── hooks/                           [Global Payload Hooks]
+│   ├── populatePublishedAt.ts       - Auto-set publish date
+│   └── revalidateRedirects.ts       - Revalidate redirects
+│
+├── plugins/                         [Payload Plugins]
+│   └── index.ts                     - Plugin configuration
+│       Includes:
+│       - formBuilderPlugin (Forms)
+│       - nestedDocsPlugin (Categories)
+│       - redirectsPlugin (URL redirects)
+│       - seoPlugin (SEO metadata)
+│       - searchPlugin (Full-text search)
+│
+├── providers/                       [React Context Providers]
+│   ├── index.tsx                    - Provider composition
+│   ├── HeaderTheme/index.tsx        - Header theme
+│   └── Theme/                       - Theme management
+│       ├── index.tsx                - Theme provider
+│       ├── types.ts                 - TypeScript types
+│       ├── shared.ts                - Utilities
+│       ├── InitTheme/index.tsx      - Initialization
+│       └── ThemeSelector/           - Theme switcher
+│           ├── index.tsx
+│           └── types.ts
+│
+├── search/                          [Search Integration]
+│   ├── beforeSync.ts                - Data transformation
+│   ├── fieldOverrides.ts            - Search field config
+│   └── Component.tsx                - Search UI
+│
+├── utilities/                       [Helper Functions]
+│   ├── canUseDOM.ts                 - Browser detection
+│   ├── deepMerge.ts                 - Object merge
+│   ├── formatAuthors.ts             - Author formatting
+│   ├── formatDateTime.ts            - Date/time formatting
+│   ├── generateMeta.ts              - SEO metadata
+│   ├── generatePreviewPath.ts       - Preview URLs
+│   ├── getDocument.ts               - Fetch document
+│   ├── getGlobals.ts                - Fetch globals
+│   ├── getMediaUrl.ts               - Media URLs
+│   ├── getMeUser.ts                 - Current user
+│   ├── getRedirects.ts              - Redirect rules
+│   ├── getURL.ts                    - Server URLs
+│   ├── mergeOpenGraph.ts            - OG tags
+│   ├── toKebabCase.ts               - String formatting
+│   ├── ui.ts                        - UI utilities
+│   ├── useClickableCard.ts          - Card interactions
+│   └── useDebounce.ts               - Debounce hook
+│
+├── payload.config.ts                [Main Payload Config]
+│   - Database: PostgreSQL
+│   - Collections: [Pages, Posts, Media, Categories, Users]
+│   - Globals: [Header, Footer]
+│   - Plugins: Form, SEO, Search, Redirects, Nested Docs
+│
+├── payload-types.ts                 [Auto-generated Types - DO NOT EDIT]
+├── environment.d.ts                 [Environment types]
+└── cssVariables.js                  [CSS breakpoints]
+```
+
+</details>
+
+---
+
+## Theme Configuration
+
+### Theme JSON Schema
+
+The application uses a dual-theme system (light/dark) with CSS variables. Here's the complete theme configuration:
+
+```json
+{
+  "themeSystem": {
+    "type": "css-variables",
+    "modes": ["light", "dark"],
+    "selector": "[data-theme='dark']",
+    "defaultTheme": "light",
+    "storageKey": "payload-theme",
+    "provider": "src/providers/Theme/index.tsx"
+  },
+
+  "colorPalette": {
+    "light": {
+      "background": "0 0% 100%",
+      "foreground": "222.2 84% 4.9%",
+      "card": "240 5% 96%",
+      "card-foreground": "222.2 84% 4.9%",
+      "popover": "0 0% 100%",
+      "popover-foreground": "222.2 84% 4.9%",
+      "primary": "222.2 47.4% 11.2%",
+      "primary-foreground": "210 40% 98%",
+      "secondary": "210 40% 96.1%",
+      "secondary-foreground": "222.2 47.4% 11.2%",
+      "muted": "210 40% 96.1%",
+      "muted-foreground": "215.4 16.3% 46.9%",
+      "accent": "210 40% 96.1%",
+      "accent-foreground": "222.2 47.4% 11.2%",
+      "destructive": "0 84.2% 60.2%",
+      "destructive-foreground": "210 40% 98%",
+      "border": "240 6% 80%",
+      "input": "214.3 31.8% 91.4%",
+      "ring": "222.2 84% 4.9%",
+      "success": "196 52% 74%",
+      "warning": "34 89% 85%",
+      "error": "10 100% 86%"
+    },
+    "dark": {
+      "background": "0 0% 0%",
+      "foreground": "210 40% 98%",
+      "card": "0 0% 4%",
+      "card-foreground": "210 40% 98%",
+      "popover": "222.2 84% 4.9%",
+      "popover-foreground": "210 40% 98%",
+      "primary": "210 40% 98%",
+      "primary-foreground": "222.2 47.4% 11.2%",
+      "secondary": "217.2 32.6% 17.5%",
+      "secondary-foreground": "210 40% 98%",
+      "muted": "217.2 32.6% 17.5%",
+      "muted-foreground": "215 20.2% 65.1%",
+      "accent": "217.2 32.6% 17.5%",
+      "accent-foreground": "210 40% 98%",
+      "destructive": "0 62.8% 30.6%",
+      "destructive-foreground": "210 40% 98%",
+      "border": "0 0% 15% / 0.8",
+      "input": "217.2 32.6% 17.5%",
+      "ring": "212.7 26.8% 83.9%",
+      "success": "196 100% 14%",
+      "warning": "34 51% 25%",
+      "error": "10 39% 43%"
+    }
+  },
+
+  "typography": {
+    "fontFamilies": {
+      "sans": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+      "serif": "'Crimson Text', Georgia, serif",
+      "mono": "'JetBrains Mono', 'Courier New', monospace"
+    },
+    "fontSizes": {
+      "xs": "clamp(0.75rem, 1.5vw, 0.875rem)",
+      "sm": "clamp(0.875rem, 2vw, 1rem)",
+      "base": "clamp(1rem, 2.5vw, 1.125rem)",
+      "lg": "clamp(1.125rem, 3vw, 1.25rem)",
+      "xl": "clamp(1.25rem, 3.5vw, 1.5rem)",
+      "2xl": "clamp(1.5rem, 4vw, 2rem)",
+      "3xl": "clamp(2rem, 5vw, 3rem)",
+      "4xl": "clamp(2.5rem, 6vw, 4rem)",
+      "5xl": "clamp(3rem, 7vw, 5rem)"
+    },
+    "headings": {
+      "h1": { "fontSize": "var(--text-4xl)", "fontWeight": 700, "lineHeight": 1.1, "letterSpacing": "-0.03em" },
+      "h2": { "fontSize": "var(--text-3xl)", "fontWeight": 600, "letterSpacing": "-0.025em" },
+      "h3": { "fontSize": "var(--text-2xl)", "fontWeight": 600 },
+      "h4": { "fontSize": "var(--text-xl)", "fontWeight": 500 }
+    }
+  },
+
+  "spacing": {
+    "xs": "0.5rem",
+    "sm": "1rem",
+    "md": "1.5rem",
+    "lg": "2rem",
+    "xl": "3rem",
+    "2xl": "4rem",
+    "3xl": "6rem",
+    "4xl": "8rem"
+  },
+
+  "layout": {
+    "maxWidthContent": "680px",
+    "maxWidthWide": "1200px",
+    "headerHeight": "72px",
+    "containerPadding": {
+      "default": "1rem",
+      "sm": "1rem",
+      "md": "2rem",
+      "lg": "2rem",
+      "xl": "2rem",
+      "2xl": "2rem"
+    }
+  },
+
+  "borderRadius": {
+    "radius": "0.2rem",
+    "sm": "calc(var(--radius) - 4px)",
+    "md": "calc(var(--radius) - 2px)",
+    "lg": "var(--radius)"
+  },
+
+  "animations": {
+    "transitions": {
+      "fast": "150ms ease",
+      "base": "250ms ease",
+      "slow": "350ms ease"
+    },
+    "shadows": {
+      "sm": "0 1px 2px rgba(0, 0, 0, 0.04)",
+      "md": "0 4px 6px rgba(0, 0, 0, 0.05)",
+      "lg": "0 10px 15px rgba(0, 0, 0, 0.08)",
+      "xl": "0 20px 25px rgba(0, 0, 0, 0.1)"
+    }
+  },
+
+  "breakpoints": {
+    "sm": "640px",
+    "md": "768px",
+    "lg": "1024px",
+    "xl": "1280px",
+    "2xl": "1536px",
+    "3xl": "1920px"
+  },
+
+  "tailwindConfig": {
+    "path": "tailwind.config.mjs",
+    "cssPath": "src/app/(frontend)/globals.css",
+    "baseColor": "slate",
+    "cssVariables": true,
+    "prefix": "",
+    "darkMode": ["selector", "[data-theme='dark']"]
+  },
+
+  "shadcnConfig": {
+    "configPath": "components.json",
+    "style": "default",
+    "rsc": true,
+    "tsx": true,
+    "aliases": {
+      "components": "@/components",
+      "utils": "@/utilities/ui"
+    }
+  }
+}
+```
+
+### Modifying Theme Colors
+
+To update theme colors, edit `src/app/(frontend)/globals.css`:
+
+```css
+:root {
+  --background: 0 0% 100%;        /* HSL values */
+  --foreground: 222.2 84% 4.9%;
+  /* ... other variables */
+}
+
+[data-theme='dark'] {
+  --background: 0 0% 0%;
+  --foreground: 210 40% 98%;
+  /* ... other variables */
+}
+```
+
+### Adding Custom Fonts
+
+1. Update `src/app/(frontend)/layout.tsx`:
+```tsx
+const FONT_STYLESHEET_URL = 'https://fonts.googleapis.com/css2?family=YourFont...'
+```
+
+2. Update CSS variables in `globals.css`:
+```css
+:root {
+  --font-sans-stack: 'YourFont', -apple-system, sans-serif;
+}
+```
+
+---
+
+## Collections & Content Model
+
+### Pages Collection
+
+**Location:** `src/collections/Pages/index.ts`
+
+**Features:**
+- Layout builder with blocks: CallToAction, Content, MediaBlock, Archive, FormBlock
+- Hero sections (4 impact levels: none, low, medium, high)
+- Draft/publish workflow with versioning
+- Live preview support
+- SEO metadata fields
+- Auto-revalidation on publish
+
+**Fields:**
+- `title` (text, required)
+- `hero` (group) - Hero configuration
+- `layout` (blocks) - Page content blocks
+- `meta` (group) - SEO fields
+- `slug` (text, auto-generated from title)
+- `publishedAt` (date)
+
+**URL Pattern:** `/{slug}`
+
+### Posts Collection
+
+**Location:** `src/collections/Posts/index.ts`
+
+**Features:**
+- Lexical rich text editor with inline blocks (Banner, Code, MediaBlock)
+- Hero image upload
+- Categories (relationship, nested taxonomy)
+- Related posts (relationship)
+- Author relationships (auto-populated)
+- Draft/publish with scheduled publishing
+- SEO metadata
+
+**Fields:**
+- `title` (text, required)
+- `heroImage` (upload, relationship to Media)
+- `content` (richText, Lexical)
+- `categories` (relationship, hasMany)
+- `relatedPosts` (relationship, hasMany)
+- `authors` (relationship, hasMany to Users)
+- `populatedAuthors` (array, read-only, auto-populated)
+- `meta` (group) - SEO fields
+- `slug` (text)
+- `publishedAt` (date)
+
+**URL Pattern:** `/posts/{slug}`
+
+### Media Collection
+
+**Location:** `src/collections/Media.ts`
+
+**Features:**
+- Image/video uploads
+- Sharp image processing
+- Pre-configured sizes
+- Focal point support
+- Manual resizing
+
+### Categories Collection
+
+**Location:** `src/collections/Categories.ts`
+
+**Features:**
+- Nested taxonomy using `@payloadcms/plugin-nested-docs`
+- Hierarchical structure (e.g., "News > Technology")
+- Used to organize posts
+
+### Users Collection
+
+**Location:** `src/collections/Users/index.ts`
+
+**Features:**
+- Authentication-enabled
+- Admin panel access
+- Role-based permissions
+
+---
+
+## Layout Builder System
+
+### Available Blocks for Pages
+
+| Block | Purpose | Config |
+|-------|---------|--------|
+| **Archive** | Display filtered post listings | `src/blocks/ArchiveBlock/` |
+| **CallToAction** | CTA sections with links | `src/blocks/CallToAction/` |
+| **Content** | Rich text content areas | `src/blocks/Content/` |
+| **MediaBlock** | Images/videos with captions | `src/blocks/MediaBlock/` |
+| **Form** | Dynamic form builder | `src/blocks/Form/` |
+
+### Available Blocks for Posts (Inline)
+
+| Block | Purpose | Config |
+|-------|---------|--------|
+| **Banner** | Alert/notice banners | `src/blocks/Banner/` |
+| **Code** | Syntax-highlighted code with copy button | `src/blocks/Code/` |
+| **MediaBlock** | Media embeds within content | `src/blocks/MediaBlock/` |
+
+### Adding a New Block
+
+1. Create directory: `src/blocks/YourBlock/`
+2. Create `config.ts`:
+```typescript
+import type { Block } from 'payload'
+
+export const YourBlock: Block = {
+  slug: 'yourBlock',
+  fields: [
+    {
+      name: 'content',
+      type: 'text',
+      required: true,
+    },
+  ],
+}
+```
+
+3. Create `Component.tsx`:
+```typescript
+import React from 'react'
+
+export const YourBlockComponent: React.FC<{ content: string }> = ({ content }) => {
+  return <div>{content}</div>
+}
+```
+
+4. Add to collection (e.g., `Pages/index.ts`):
+```typescript
+import { YourBlock } from '@/blocks/YourBlock/config'
+
+fields: [
+  {
+    name: 'layout',
+    type: 'blocks',
+    blocks: [YourBlock, /* other blocks */],
+  },
+]
+```
+
+5. Add to `RenderBlocks.tsx`:
+```typescript
+import { YourBlockComponent } from '@/blocks/YourBlock/Component'
+
+const blockComponents = {
+  yourBlock: YourBlockComponent,
+  // ...
+}
+```
+
+---
+
+## Access Control
+
+### Access Control Functions
+
+**Location:** `src/access/`
+
+```typescript
+// authenticated.ts - Requires login
+export const authenticated = ({ req: { user } }) => Boolean(user)
+
+// anyone.ts - Public access
+export const anyone = () => true
+
+// authenticatedOrPublished.ts - Public if published, otherwise authenticated
+export const authenticatedOrPublished = ({ req: { user } }) => {
+  if (user) return true
+  return { _status: { equals: 'published' } }
+}
+```
+
+### Applying Access Control
+
+```typescript
+export const YourCollection: CollectionConfig = {
+  access: {
+    create: authenticated,           // Only logged-in users can create
+    read: authenticatedOrPublished,  // Public can read published, logged-in can read all
+    update: authenticated,           // Only logged-in users can update
+    delete: authenticated,           // Only logged-in users can delete
+  },
+  // ...
+}
+```
+
+---
+
+## Hooks & Revalidation
+
+### On-Demand ISR Revalidation
+
+**Pattern:** Collections use `afterChange` hooks to revalidate Next.js cache when content is published.
+
+**Example:** `src/collections/Pages/hooks/revalidatePage.ts`
+
+```typescript
+import { revalidatePath } from 'next/cache'
+import type { CollectionAfterChangeHook } from 'payload'
+
+export const revalidatePage: CollectionAfterChangeHook = ({ doc, req }) => {
+  if (doc._status === 'published') {
+    const path = `/${doc.slug}`
+    req.payload.logger.info(`Revalidating page at path: ${path}`)
+    revalidatePath(path)
+  }
+  return doc
+}
+```
+
+### Hook Types
+
+| Hook | Purpose | Example |
+|------|---------|---------|
+| `beforeChange` | Modify data before save | `populatePublishedAt.ts` |
+| `afterChange` | Actions after save | `revalidatePage.ts`, `revalidatePost.ts` |
+| `afterRead` | Modify data on read | `populateAuthors.ts` |
+| `afterDelete` | Actions after delete | `revalidateDelete` |
+
+### Global Hooks
+
+**Location:** `src/hooks/`
+
+- `populatePublishedAt.ts` - Auto-set `publishedAt` timestamp on first publish
+- `revalidateRedirects.ts` - Rebuild redirect cache when redirects change
+
+---
+
+## Testing
+
+### Integration Tests (Vitest)
+
+**Location:** `tests/int/`
+**Pattern:** `*.int.spec.ts`
+**Config:** `vitest.config.mts`
+
+```bash
+# Run all integration tests
+pnpm test:int
+
+# Run specific test
+pnpm exec vitest run tests/int/api.int.spec.ts --config ./vitest.config.mts
+```
+
+**Example Test:**
+```typescript
+import { describe, it, expect } from 'vitest'
+
+describe('API Tests', () => {
+  it('should fetch posts', async () => {
+    // Test code
+  })
+})
+```
+
+### E2E Tests (Playwright)
+
+**Location:** `tests/e2e/`
+**Pattern:** `*.e2e.spec.ts`
+**Config:** `playwright.config.ts`
+
+```bash
+# Run all e2e tests
+pnpm test:e2e
+
+# Run specific test
+pnpm exec playwright test tests/e2e/frontend.e2e.spec.ts
+```
+
+**Example Test:**
+```typescript
+import { test, expect } from '@playwright/test'
+
+test('homepage loads', async ({ page }) => {
+  await page.goto('http://localhost:3000')
+  await expect(page).toHaveTitle(/Payload/)
+})
+```
+
+---
+
+## Database & Migrations
+
+### PostgreSQL with Payload
+
+**Adapter:** `@payloadcms/db-postgres`
+**Config:** `src/payload.config.ts`
+
+```typescript
+db: postgresAdapter({
+  pool: {
+    connectionString: process.env.DATABASE_URI || '',
+  },
+  push: process.env.NODE_ENV !== 'production', // Auto-push in dev
+})
+```
+
+### Migration Workflow
+
+**Development (Local):**
+- `push: true` automatically applies schema changes
+- No migrations needed during development
+
+**Production:**
+
+1. Create migration:
 ```bash
 pnpm payload migrate:create
 ```
 
-This creates the migration files you will need to push alongside with your new configuration.
+2. Commit migration files (created in `migrations/` directory)
 
-On the server after building and before running `pnpm start` you will want to run your migrations
+3. Deploy code
 
+4. Run migrations on server:
 ```bash
 pnpm payload migrate
 ```
 
-This command will check for any migrations that have not yet been run and try to run them and it will keep a record of migrations that have been run in the database.
+### Important Notes
 
-### Docker
+- Always create migrations before deploying schema changes to production
+- Migrations run sequentially and track execution in database
+- Setting `push: true` in production risks data loss and migration conflicts
 
-This repo adds a dedicated Postgres service under `database/` for local development.
+---
 
-To use Docker locally:
+## Production Deployment
 
-1. Follow [steps 1 and 2 from above](#development) to copy `.env` into your project root.
-2. Create a `database/.env` file (see `database/README.md` for the expected variables and example connection strings).
-3. Start Postgres with:
+### Pre-Deployment Checklist
+
+- [ ] Set `NODE_ENV=production`
+- [ ] Configure production `DATABASE_URI`
+- [ ] Generate secure `PAYLOAD_SECRET`, `CRON_SECRET`, `PREVIEW_SECRET`
+- [ ] Set correct `NEXT_PUBLIC_SERVER_URL`
+- [ ] Create and run migrations: `pnpm payload migrate:create` → `pnpm payload migrate`
+- [ ] Build application: `pnpm build`
+- [ ] Configure `CRON_SECRET` for scheduled jobs
+
+### Build & Start
 
 ```bash
-docker compose -f database/docker-compose.yml --env-file database/.env up -d
+# 1. Run migrations
+pnpm payload migrate
+
+# 2. Build for production
+pnpm build
+
+# 3. Start production server
+pnpm start
 ```
 
-4. Run the app as normal with `pnpm dev` (or `pnpm build && pnpm start`) and ensure your `DATABASE_URL` / related env vars point at the Postgres instance from `database/`.
+### Vercel Deployment
 
-The original template `docker-compose.yml` (MongoDB) is kept for reference, but for this repo the Postgres service in `database/` is the recommended local setup.
-
-### Seed
-
-To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel.
-
-The seed script will also create a demo user for demonstration purposes only:
-
-- Demo Author
-  - Email: `demo-author@payloadcms.com`
-  - Password: `password`
-
-> NOTICE: seeding the database is destructive because it drops your current database to populate a fresh one from the seed template. Only run this command if you are starting a new project or can afford to lose your current data.
-
-## Production
-
-To run Payload in production, you need to build and start the Admin panel. To do so, follow these steps:
-
-1. Invoke the `next build` script by running `pnpm build` or `npm run build` in your project root. This creates a `.next` directory with a production-ready admin bundle.
-1. Finally run `pnpm start` or `npm run start` to run Node in production and serve Payload from the `.build` directory.
-1. When you're ready to go live, see Deployment below for more details.
-
-### Deploying to Vercel
-
-This template can also be deployed to Vercel for free. You can get started by choosing the Vercel DB adapter during the setup of the template or by manually installing and configuring it:
+**Database:** Use Vercel Postgres adapter
 
 ```bash
 pnpm add @payloadcms/db-vercel-postgres
 ```
 
-```ts
-// payload.config.ts
+**Config:**
+```typescript
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 
 export default buildConfig({
-  // ...
   db: vercelPostgresAdapter({
     pool: {
       connectionString: process.env.POSTGRES_URL || '',
     },
   }),
   // ...
+})
 ```
 
-We also support Vercel's blob storage:
+**Storage:** Optional Vercel Blob Storage
 
 ```bash
 pnpm add @payloadcms/storage-vercel-blob
 ```
 
-```ts
-// payload.config.ts
-import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+**Note:** Vercel free tier limits cron jobs to daily execution.
 
-export default buildConfig({
-  // ...
-  plugins: [
-    vercelBlobStorage({
-      collections: {
-        [Media.slug]: true,
-      },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
-    }),
-  ],
-  // ...
-```
+### Self-Hosting
 
-There is also a simplified [one click deploy](https://github.com/payloadcms/payload/tree/templates/with-vercel-postgres) to Vercel should you need it.
+Deploy to any Node.js hosting platform:
+- VPS (DigitalOcean, Linode, AWS EC2)
+- DigitalOcean App Platform
+- Coolify
+- Heroku
 
-### Self-hosting
+**Requirements:**
+- Node.js 18.20.2+ or 20.9.0+
+- PostgreSQL database
+- Environment variables configured
 
-Before deploying your app, you need to:
+---
 
-1. Ensure your app builds and serves in production. See [Production](#production) for more details.
-2. You can then deploy Payload as you would any other Node.js or Next.js application either directly on a VPS, DigitalOcean's Apps Platform, via Coolify or more. More guides coming soon.
+## Contributing
 
-You can also deploy your app manually, check out the [deployment documentation](https://payloadcms.com/docs/production/deployment) for full details.
+### Code Style
 
-## Questions
+- TypeScript strict mode
+- ESLint configuration in `eslint.config.mjs`
+- Run `pnpm lint:fix` before committing
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+### Adding Features
+
+1. Create feature branch
+2. Implement changes
+3. Add tests (integration and/or e2e)
+4. Run full test suite: `pnpm test`
+5. Run linter: `pnpm lint`
+6. Update this README if adding new patterns/conventions
+7. Submit PR
+
+### Documentation
+
+- Keep README.md as single source of truth
+- Update theme JSON when modifying styles
+- Document new blocks in Layout Builder section
+- Add migration notes for breaking changes
+
+---
+
+## License
+
+MIT
+
+---
+
+## Support
+
+- **Issues:** [GitHub Issues](https://github.com/payloadcms/payload/issues)
+- **Discord:** [Payload Discord](https://discord.com/invite/payload)
+- **Discussions:** [GitHub Discussions](https://github.com/payloadcms/payload/discussions)
+
+---
+
+## Additional Resources
+
+- [Payload CMS Documentation](https://payloadcms.com/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TailwindCSS Documentation](https://tailwindcss.com/docs)
+- [shadcn/ui Documentation](https://ui.shadcn.com)
