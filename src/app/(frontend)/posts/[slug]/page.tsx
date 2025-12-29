@@ -44,7 +44,6 @@ type Args = {
 export default async function Post({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug = '' } = await paramsPromise
-  // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const url = '/posts/' + decodedSlug
   const post = await queryPostBySlug({ slug: decodedSlug })
@@ -52,34 +51,72 @@ export default async function Post({ params: paramsPromise }: Args) {
   if (!post) return <PayloadRedirects url={url} />
 
   return (
-    <article className="pt-16 pb-16">
+    <article className="pb-16">
       <PageClient />
 
-      {/* Allows redirects for valid pages too */}
       <PayloadRedirects disableNotFound url={url} />
 
       {draft && <LivePreviewListener />}
 
+      {/* Pinterest-style Hero (image above, content below) */}
       <PostHero post={post} />
 
-      <div className="flex flex-col items-center gap-4 pt-8">
-        <div className="container">
-          <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-          {post.relatedPosts && post.relatedPosts.length > 0 && (
-            <RelatedPosts
-              className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
-              docs={post.relatedPosts.filter((post) => typeof post === 'object')}
-            />
-          )}
-        </div>
+      {/* Article Content */}
+      <div className="post-content">
+        <RichText
+          className="prose prose-lg dark:prose-invert max-w-none"
+          data={post.content}
+          enableGutter={false}
+        />
       </div>
+
+      {/* Related Posts */}
+      {post.relatedPosts && post.relatedPosts.length > 0 && (
+        <section className="related-posts-section">
+          <div className="related-posts-header">
+            <h2 className="related-posts-title">Related Posts</h2>
+            <a href="/posts" className="related-posts-link">
+              See all posts <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div className="related-posts-grid">
+            {post.relatedPosts
+              .filter((relatedPost) => typeof relatedPost === 'object')
+              .slice(0, 2)
+              .map((relatedPost, index) => {
+                if (typeof relatedPost === 'object') {
+                  return (
+                    <a
+                      key={relatedPost.slug || index}
+                      href={`/posts/${relatedPost.slug}`}
+                      className="blog-card"
+                    >
+                      <div className="blog-card-image-wrapper">
+                        {relatedPost.heroImage && typeof relatedPost.heroImage !== 'string' && (
+                          <img
+                            src={relatedPost.heroImage.url || ''}
+                            alt={relatedPost.heroImage.alt || relatedPost.title}
+                            className="blog-card-image"
+                          />
+                        )}
+                      </div>
+                      <div className="blog-card-content">
+                        <h3 className="blog-card-title">{relatedPost.title}</h3>
+                      </div>
+                    </a>
+                  )
+                }
+                return null
+              })}
+          </div>
+        </section>
+      )}
     </article>
   )
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug = '' } = await paramsPromise
-  // Decode to support slugs with special characters
   const decodedSlug = decodeURIComponent(slug)
   const post = await queryPostBySlug({ slug: decodedSlug })
 
