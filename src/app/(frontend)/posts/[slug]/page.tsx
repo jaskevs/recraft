@@ -50,6 +50,11 @@ export default async function Post({ params: paramsPromise }: Args) {
 
   if (!post) return <PayloadRedirects url={url} />
 
+  // Filter related posts to only objects
+  const relatedPosts = post.relatedPosts?.filter(
+    (relatedPost): relatedPost is Post => typeof relatedPost === 'object'
+  )
+
   return (
     <article className="pb-16">
       <PageClient />
@@ -71,45 +76,8 @@ export default async function Post({ params: paramsPromise }: Args) {
       </div>
 
       {/* Related Posts */}
-      {post.relatedPosts && post.relatedPosts.length > 0 && (
-        <section className="related-posts-section">
-          <div className="related-posts-header">
-            <h2 className="related-posts-title">Related Posts</h2>
-            <a href="/posts" className="related-posts-link">
-              See all posts <span aria-hidden="true">→</span>
-            </a>
-          </div>
-          <div className="related-posts-grid">
-            {post.relatedPosts
-              .filter((relatedPost) => typeof relatedPost === 'object')
-              .slice(0, 2)
-              .map((relatedPost, index) => {
-                if (typeof relatedPost === 'object') {
-                  return (
-                    <a
-                      key={relatedPost.slug || index}
-                      href={`/posts/${relatedPost.slug}`}
-                      className="blog-card"
-                    >
-                      <div className="blog-card-image-wrapper">
-                        {relatedPost.heroImage && typeof relatedPost.heroImage !== 'string' && (
-                          <img
-                            src={relatedPost.heroImage.url || ''}
-                            alt={relatedPost.heroImage.alt || relatedPost.title}
-                            className="blog-card-image"
-                          />
-                        )}
-                      </div>
-                      <div className="blog-card-content">
-                        <h3 className="blog-card-title">{relatedPost.title}</h3>
-                      </div>
-                    </a>
-                  )
-                }
-                return null
-              })}
-          </div>
-        </section>
+      {relatedPosts && relatedPosts.length > 0 && (
+        <RelatedPosts docs={relatedPosts.slice(0, 2)} />
       )}
     </article>
   )

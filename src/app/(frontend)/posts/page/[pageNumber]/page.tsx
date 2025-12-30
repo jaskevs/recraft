@@ -41,54 +41,66 @@ export default async function Page({ params: paramsPromise }: Args) {
   })
 
   return (
-    <div className="pt-24 pb-16">
+    <div className="blog-listing-page">
       <PageClient />
 
-      {/* Page Header */}
-      <header className="blog-page-header">
-        <h1 className="blog-page-title">Blog</h1>
-        <p className="blog-page-subtitle">
-          Insights, tutorials, and updates from our team
-        </p>
+      {/* Hero Section */}
+      <header className="blog-hero">
+        <div className="blog-hero-content">
+          <span className="blog-hero-label">Our Blog</span>
+          <h1 className="blog-hero-title">Stories & Insights</h1>
+          <p className="blog-hero-subtitle">
+            Discover the latest insights, tutorials, and updates from our team
+          </p>
+        </div>
+        <div className="blog-hero-decoration" aria-hidden="true" />
       </header>
 
-      {/* Category Filter */}
-      <div className="category-filter">
-        <span className="category-filter-label">Filter by:</span>
-        <button className="category-pill active">All</button>
-        <button className="category-pill">Insights</button>
-        <button className="category-pill">Tutorials</button>
-        <button className="category-pill">News</button>
-      </div>
+      {/* Main Content Section */}
+      <section className="blog-main-section">
+        {/* Section Header with Filter */}
+        <div className="blog-section-header">
+          <div className="blog-section-title-row">
+            <h2 className="blog-section-title">All Posts</h2>
+            <PageRange
+              collection="posts"
+              currentPage={posts.page}
+              limit={12}
+              totalDocs={posts.totalDocs}
+            />
+          </div>
 
-      {/* Page Range */}
-      <div className="max-w-[1200px] mx-auto px-4 pt-6">
-        <PageRange
-          collection="posts"
-          currentPage={posts.page}
-          limit={12}
-          totalDocs={posts.totalDocs}
-        />
-      </div>
+          {/* Filter Bar */}
+          <div className="blog-filter-bar">
+            <span className="blog-filter-label">Filter:</span>
+            <div className="blog-filter-pills">
+              <button className="blog-filter-pill active">All</button>
+              <button className="blog-filter-pill">Insights</button>
+              <button className="blog-filter-pill">Tutorials</button>
+              <button className="blog-filter-pill">News</button>
+            </div>
+          </div>
+        </div>
 
-      {/* Blog Grid */}
-      <div className="blog-grid">
-        {posts.docs.map((post, index) => (
-          <Card
-            key={post.slug || index}
-            doc={post}
-            relationTo="posts"
-            showCategories
-          />
-        ))}
-      </div>
+        {/* Posts Grid */}
+        <div className="blog-posts-grid">
+          {posts.docs.map((post, index) => (
+            <Card
+              key={post.slug || index}
+              doc={post}
+              relationTo="posts"
+              showCategories
+            />
+          ))}
+        </div>
 
-      {/* Pagination */}
-      <div className="max-w-[1200px] mx-auto px-4">
+        {/* Pagination */}
         {posts?.page && posts?.totalPages > 1 && (
-          <Pagination page={posts.page} totalPages={posts.totalPages} />
+          <div className="blog-pagination">
+            <Pagination page={posts.page} totalPages={posts.totalPages} />
+          </div>
         )}
-      </div>
+      </section>
     </div>
   )
 }
@@ -96,7 +108,7 @@ export default async function Page({ params: paramsPromise }: Args) {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { pageNumber } = await paramsPromise
   return {
-    title: `Blog | Page ${pageNumber || ''}`,
+    title: `Blog | Page ${pageNumber}`,
   }
 }
 

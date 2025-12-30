@@ -53,13 +53,21 @@ export const ArchiveBlock: React.FC<
   }
 
   return (
-    <div className="my-16" id={`block-${id}`}>
+    <section className="related-posts-section" id={`block-${id}`}>
       {introContent && (
-        <div className="container mb-16">
-          <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
+        <div className="mb-8">
+          <RichText className="max-w-[48rem]" data={introContent} enableGutter={false} />
         </div>
       )}
+
+      <div className="related-posts-header">
+        <h2 className="related-posts-title">Latest Posts</h2>
+        <a href="/posts" className="related-posts-link">
+          See all posts <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
       <CollectionArchive posts={posts} />
-    </div>
+    </section>
   )
 }
