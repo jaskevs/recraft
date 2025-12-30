@@ -11,7 +11,6 @@ import { draftMode } from 'next/headers'
 
 import './globals.css'
 import './minimalist.css'
-import './typography.css'
 import { getServerSideURL } from '@/utilities/getURL'
 
 const FONT_STYLESHEET_URL =
