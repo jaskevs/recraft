@@ -27,12 +27,12 @@ export async function Footer() {
         {/* Newsletter Section */}
         <section className="footer-newsletter">
           <div className="footer-newsletter-content">
-            <span className="footer-newsletter-label">Stay Updated</span>
+            <span className="footer-newsletter-label">Join the Signal</span>
             <h2 className="footer-newsletter-title">
-              Get the latest insights delivered to your inbox
+              Dispatches from the frontier
             </h2>
             <p className="footer-newsletter-description">
-              Join our newsletter for weekly updates on new articles, tutorials, and more.
+              Weekly thoughts on AI, design, and the future we&apos;re building together.
             </p>
           </div>
 
@@ -50,7 +50,7 @@ export async function Footer() {
               <Logo />
             </Link>
             <p className="footer-tagline">
-              Building digital experiences that inspire and engage.
+              Exploring the frontier where human intuition meets artificial intelligence.
             </p>
             <div className="footer-social">
               <a href="#" className="footer-social-link" aria-label="Twitter">
@@ -113,7 +113,7 @@ export async function Footer() {
 
       {/* Large decorative text */}
       <div className="footer-decoration" aria-hidden="true">
-        <span className="footer-decoration-text">INNOVATE</span>
+        <span className="footer-decoration-text">POTENTIAL</span>
       </div>
     </footer>
   )
