@@ -84,13 +84,23 @@ pnpm dev
 
 ### 5. Seed Database (Optional)
 
-Login to `/admin` and click "Seed Database" button, or visit:
-```
-http://localhost:3000/next/seed
+Login to `/admin` and click "Seed Database" button on the dashboard.
+
+Alternatively, seed via the API (requires authentication):
+
+```bash
+# Login and seed in one command
+TOKEN=$(curl -s -X POST http://localhost:3000/api/users/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"your@email.com","password":"your-password"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin).get('token',''))")
+
+curl -s -X POST http://localhost:3000/next/seed \
+  -H "Authorization: JWT $TOKEN"
 ```
 
-**Demo User:**
-- Email: `demo-author@payloadcms.com`
+**Demo User (created by seed):**
+- Email: `demo-author@example.com`
 - Password: `password`
 
 ---
